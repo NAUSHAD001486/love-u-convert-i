@@ -2,15 +2,13 @@ import { Router } from 'express';
 import { convertFile } from '../controllers/convert.controller';
 import { ssrfGuard } from '../middlewares/ssrfGuard';
 import { uploadStream } from '../middlewares/uploadStream';
-import { dailyQuotaRedis } from '../middlewares/dailyQuotaRedis';
-import { speedLimiterRedis } from '../middlewares/speedLimiterRedis';
+import { quotaAndRateRedis } from '../middlewares/quotaAndRateRedis';
 
 const router = Router();
 
 router.post(
   '/',
-  speedLimiterRedis,
-  dailyQuotaRedis,
+  quotaAndRateRedis,
   ssrfGuard,
   uploadStream,
   convertFile
