@@ -66,7 +66,7 @@ async function getRequestBytes(req: Request): Promise<number> {
       try {
         const response = await got.head(url, {
           timeout: { request: 5000 },
-          retry: { limit: 0 },
+          retry: { limit: 0 } as any,
         });
         const contentLength = response.headers['content-length'];
         if (contentLength) {

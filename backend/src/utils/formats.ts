@@ -5,7 +5,8 @@ export const SUPPORTED_FORMATS = {
 } as const;
 
 export function isValidFormat(format: string, category: keyof typeof SUPPORTED_FORMATS): boolean {
-  return SUPPORTED_FORMATS[category].includes(format.toLowerCase());
+  const formats = SUPPORTED_FORMATS[category] as readonly string[];
+  return formats.includes(format.toLowerCase());
 }
 
 export function getFileExtension(filename: string): string {

@@ -34,10 +34,9 @@ async function createSimpleZip(files: FileInfo[]): Promise<Buffer> {
   for (const file of files) {
     try {
       const response = await got(file.url, {
-        responseType: 'buffer',
         timeout: { request: 30000 },
-      });
-      buffers.push({ name: file.name, data: response.body });
+      } as any);
+      buffers.push({ name: file.name, data: Buffer.from(response.body as any) });
     } catch (err) {
       console.error(`Failed to download ${file.url}:`, err);
     }
