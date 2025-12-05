@@ -31,8 +31,8 @@ async function main() {
       requestId: `cleanup-${Date.now()}`,
     });
 
-    // Print JSON report to stdout
-    console.log(JSON.stringify(result, null, 2));
+    // Print JSON report to stdout (logs go to stderr)
+    process.stdout.write(JSON.stringify(result, null, 2) + '\n');
     
     process.exit(result.failed > 0 ? 1 : 0);
   } catch (error) {

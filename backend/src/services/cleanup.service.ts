@@ -90,7 +90,7 @@ async function listResourcesByPrefix(
       nextCursor = result.next_cursor;
       
       if (nextCursor) {
-        console.log(`[${requestId}] Fetched ${resources.length} resources, continuing with cursor...`);
+        console.error(`[${requestId}] Fetched ${resources.length} resources, continuing with cursor...`);
       }
     } catch (error) {
       console.error(`[${requestId}] Error listing ${resourceType} resources:`, error);
@@ -136,7 +136,7 @@ async function deleteResources(
         errors.push(...result.errors.map((e: any) => e.message || String(e)));
       }
 
-      console.log(`[${requestId}] Deleted batch ${i / batchSize + 1}: ${deleted} deleted, ${failed} failed`);
+      console.error(`[${requestId}] Deleted batch ${i / batchSize + 1}: ${deleted} deleted, ${failed} failed`);
       
       // Rate limiting: wait a bit between batches
       if (i + batchSize < publicIds.length) {
@@ -164,7 +164,7 @@ export async function cleanupOldResources(
   const ctx = options as any;
   const requestId = ctx?.requestId || 'cleanup-job';
 
-  console.log(`[${requestId}] Starting cleanup: dryRun=${dryRun}, prefix=${prefix}, ttlSeconds=${ttlSeconds}`);
+  console.error(`[${requestId}] Starting cleanup: dryRun=${dryRun}, prefix=${prefix}, ttlSeconds=${ttlSeconds}`);
 
   const result: CleanupResult = {
     deleted: 0,
@@ -176,10 +176,10 @@ export async function cleanupOldResources(
 
   try {
     // List both image and raw resources
-    console.log(`[${requestId}] Listing image resources...`);
+    console.error(`[${requestId}] Listing image resources...`);
     const imageResources = await listResourcesByPrefix(prefix, 'image', ctx);
     
-    console.log(`[${requestId}] Listing raw resources...`);
+    console.error(`[${requestId}] Listing raw resources...`);
     const rawResources = await listResourcesByPrefix(prefix, 'raw', ctx);
 
     const allResources = [
@@ -187,14 +187,14 @@ export async function cleanupOldResources(
       ...rawResources.map(r => ({ ...r, resource_type: 'raw' })),
     ];
 
-    console.log(`[${requestId}] Found ${allResources.length} total resources`);
+    console.error(`[${requestId}] Found ${allResources.length} total resources`);
 
     // Filter resources older than TTL
     const candidates = allResources.filter(resource =>
       isResourceOlderThan(resource, ttlSeconds)
     );
 
-    console.log(`[${requestId}] Found ${candidates.length} resources older than ${ttlSeconds}s`);
+    console.error(`[${requestId}] Found ${candidates.length} resources older than ${ttlSeconds}s`);
 
     result.candidates = candidates;
     result.details = candidates.map(c => ({
@@ -204,20 +204,20 @@ export async function cleanupOldResources(
     }));
 
     if (dryRun) {
-      console.log(`[${requestId}] DRY RUN: Would delete ${candidates.length} resources`);
+      console.error(`[${requestId}] DRY RUN: Would delete ${candidates.length} resources`);
       for (const candidate of candidates) {
         const createdAt = parseCreatedAt(candidate.created_at);
         const ageSeconds = (Date.now() - createdAt.getTime()) / 1000;
-        console.log(
-          `[${requestId}] Would delete: ${candidate.public_id} (${candidate.resource_type}, age: ${Math.floor(ageSeconds)}s)`
-        );
+      console.error(
+        `[${requestId}] Would delete: ${candidate.public_id} (${candidate.resource_type}, age: ${Math.floor(ageSeconds)}s)`
+      );
       }
       return result;
     }
 
     // Real deletion
     if (candidates.length === 0) {
-      console.log(`[${requestId}] No resources to delete`);
+      console.error(`[${requestId}] No resources to delete`);
       return result;
     }
 
@@ -232,7 +232,7 @@ export async function cleanupOldResources(
 
     // Delete images
     if (imageIds.length > 0) {
-      console.log(`[${requestId}] Deleting ${imageIds.length} image resources...`);
+      console.error(`[${requestId}] Deleting ${imageIds.length} image resources...`);
       const imageResult = await deleteResources(imageIds, 'image', ctx);
       result.deleted += imageResult.deleted;
       result.failed += imageResult.failed;
@@ -241,14 +241,14 @@ export async function cleanupOldResources(
 
     // Delete raw files
     if (rawIds.length > 0) {
-      console.log(`[${requestId}] Deleting ${rawIds.length} raw resources...`);
+      console.error(`[${requestId}] Deleting ${rawIds.length} raw resources...`);
       const rawResult = await deleteResources(rawIds, 'raw', ctx);
       result.deleted += rawResult.deleted;
       result.failed += rawResult.failed;
       result.errors.push(...rawResult.errors);
     }
 
-    console.log(`[${requestId}] Cleanup complete: ${result.deleted} deleted, ${result.failed} failed`);
+    console.error(`[${requestId}] Cleanup complete: ${result.deleted} deleted, ${result.failed} failed`);
 
   } catch (error: any) {
     const errorMsg = error.message || String(error);
