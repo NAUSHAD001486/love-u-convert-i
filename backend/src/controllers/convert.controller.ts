@@ -3,12 +3,17 @@ import { convertService } from '../services/convert.service';
 import { successResponse, errorResponse } from '../utils/response';
 
 export const convertFile = async (req: Request, res: Response) => {
+  const requestId = (req as any).id || 'unknown';
+
   try {
-    // TODO: Implement conversion logic
     const result = await convertService.convert(req);
-    return successResponse(res, result);
+    
+    // Return the result directly (it already has status field)
+    return res.status(200).json(result);
   } catch (error) {
-    return errorResponse(res, error as Error);
+    console.error(`[${requestId}] Conversion error:`, error);
+    
+    const err = error as Error;
+    return errorResponse(res, err, 500);
   }
 };
-
