@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(requestId);
 app.use(cors);
 
-app.use('/health', healthRoutes);
+app.use('/api/health', healthRoutes);
 app.use('/api/convert', convertRoutes);
 
 app.use(notFound);
