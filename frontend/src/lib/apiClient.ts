@@ -29,14 +29,22 @@ export async function uploadAndConvert(
 
   // If HTTP status is not 2xx, throw error
   if (!response.ok) {
+    // Handle quota/rate limit errors (429)
+    if (response.status === 429) {
+      const errorMsg = data.error?.message || data.message || 'Rate limit or quota exceeded';
+      throw new Error(errorMsg);
+    }
+    
+    // Handle other errors
     throw new Error(
-      data.message || `HTTP ${response.status}: ${response.statusText}`
+      data.message || data.error?.message || `HTTP ${response.status}: ${response.statusText}`
     );
   }
 
   // If API returned error status, throw error
-  if (data.status === 'error') {
-    throw new Error(data.message || 'Conversion failed');
+  if (data.status === 'error' || data.success === false) {
+    const errorMsg = data.message || data.error?.message || 'Conversion failed';
+    throw new Error(errorMsg);
   }
 
   // Return success response
