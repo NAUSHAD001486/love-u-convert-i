@@ -22,7 +22,7 @@ export const zipService = {
       public_ids: publicIds,
       target_public_id: targetId,
       flatten_folders: true,
-      zip_file_name: `love-u-convert_${ts}.zip`,
+      zip_file_name: 'love-u-convert.zip',
     });
 
     console.log(`[${requestId}] Generated archive download URL: ${downloadUrl}`);

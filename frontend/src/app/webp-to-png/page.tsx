@@ -20,6 +20,28 @@ export default function WebpToPngPage() {
     setError(null);
   };
 
+  const handleDownload = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Failed to download file');
+      }
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error('Download error:', err);
+      // Fallback to direct link if blob download fails
+      window.open(url, '_blank');
+    }
+  };
+
   const handleConvert = async () => {
     if (selectedFiles.length === 0) {
       setError('Please select at least one file.');
@@ -104,14 +126,23 @@ export default function WebpToPngPage() {
                   ? 'Your file is ready!'
                   : 'Your ZIP file is ready!'}
               </p>
-              <a
-                href={result.url}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-block px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200"
-              >
-                Download {result.mode === 'single' ? 'File' : 'ZIP'}
-              </a>
+              {result.mode === 'multi' ? (
+                <button
+                  onClick={() => handleDownload(result.url, 'love-u-convert.zip')}
+                  className="inline-block px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200"
+                >
+                  Download ZIP
+                </button>
+              ) : (
+                <a
+                  href={result.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200"
+                >
+                  Download File
+                </a>
+              )}
             </div>
           )}
 
