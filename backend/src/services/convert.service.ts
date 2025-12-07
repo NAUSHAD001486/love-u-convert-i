@@ -67,6 +67,7 @@ export const convertService = {
         }
         
         // Clean up weird characters and normalize
+        // Keep alphanumerics, dash, underscore
         baseName = baseName
           .replace(/[^a-zA-Z0-9_-]/g, '-') // Replace special chars with dash
           .replace(/-+/g, '-') // Replace multiple dashes with single
@@ -77,6 +78,7 @@ export const convertService = {
           baseName = 'converted-image';
         }
         
+        // Ensure extension is appended correctly
         return `${baseName}.${format}`;
       };
       
@@ -100,18 +102,32 @@ export const convertService = {
     // Multiple files - convert all and create zip
     console.log(`[${requestId}] Converting ${files.length} files to ${targetFormat}`);
     
-    const convertedResults: Array<{ public_id: string; secure_url: string; format: string }> = [];
-    const failedFiles: string[] = [];
+    interface FileConversionResult {
+      originalName: string;
+      success: boolean;
+      publicId?: string;
+      url?: string;
+      errorCode?: string;
+      errorMessage?: string;
+    }
+    
+    const fileResults: FileConversionResult[] = [];
+    const successfulPublicIds: string[] = [];
 
     for (const file of files) {
+      const fileResult: FileConversionResult = {
+        originalName: file.filename,
+        success: false,
+      };
+
       try {
         // Check file size before uploading
         const CLOUDINARY_MAX_SIZE = 10 * 1024 * 1024; // 10MB
         if (file.size > CLOUDINARY_MAX_SIZE) {
-          if (targetFormat.toLowerCase() === 'psd') {
-            throw new Error(`PSD file "${file.filename}" is too large (${(file.size / (1024 * 1024)).toFixed(2)}MB). Cloudinary free tier limit is 10MB per file.`);
-          }
-          throw new Error(`File "${file.filename}" is too large (${(file.size / (1024 * 1024)).toFixed(2)}MB). Cloudinary free tier limit is 10MB per file.`);
+          fileResult.errorCode = 'FILE_TOO_LARGE';
+          fileResult.errorMessage = `File is too large (${(file.size / (1024 * 1024)).toFixed(2)}MB). Cloudinary free tier limit is 10MB per file.`;
+          fileResults.push(fileResult);
+          continue; // Continue with other files
         }
         
         const result = await cloudinaryService.uploadAndConvertStream(
@@ -121,70 +137,52 @@ export const convertService = {
           { requestId }
         );
 
-        // Verify the output format matches target format (prevent random PNGs in ZIP)
-        const outputFormat = result.format?.toLowerCase();
-        const formatMap: Record<string, string> = {
-          jpeg: 'jpg',
-          jpg: 'jpg',
-          png: 'png',
-          webp: 'webp',
-          gif: 'gif',
-          ico: 'ico',
-          psd: 'psd',
-          eps: 'eps',
-          svg: 'svg',
-          tga: 'tga',
-          tiff: 'tiff',
-          bmp: 'bmp',
-        };
-        const expectedFormat = formatMap[targetFormat.toLowerCase()] || targetFormat.toLowerCase();
+        // Success
+        fileResult.success = true;
+        fileResult.publicId = result.public_id;
+        fileResult.url = result.secure_url;
+        successfulPublicIds.push(result.public_id);
         
-        if (outputFormat && outputFormat !== expectedFormat && outputFormat !== 'png') {
-          console.warn(`[${requestId}] Format mismatch for ${file.filename}: expected ${expectedFormat}, got ${outputFormat}`);
-        }
-
-        convertedResults.push({
-          public_id: result.public_id,
-          secure_url: result.secure_url,
-          format: result.format || expectedFormat,
-        });
       } catch (error: any) {
         console.error(`[${requestId}] Failed to convert ${file.filename}:`, error);
-        failedFiles.push(file.filename);
         
-        // Check if it's a Cloudinary file size limit error
+        // Determine error code and message
         if (error?.message?.includes('File size too large') || error?.message?.includes('10485760') || error?.message?.includes('Maximum is')) {
-          // Special message for PSD files
-          if (targetFormat.toLowerCase() === 'psd') {
-            throw new Error(`PSD file "${file.filename}" is too large (${(file.size / (1024 * 1024)).toFixed(2)}MB). Cloudinary free tier limit is 10MB per file. Please use a smaller PSD file or upgrade your Cloudinary plan.`);
-          }
-          throw new Error(`File "${file.filename}" is too large for Cloudinary free tier (max 10MB). File size: ${(file.size / (1024 * 1024)).toFixed(2)}MB`);
+          fileResult.errorCode = 'FILE_TOO_LARGE';
+          fileResult.errorMessage = error.message || 'File too large for Cloudinary free tier';
+        } else if (error?.message?.includes('Unsupported')) {
+          fileResult.errorCode = 'UNSUPPORTED_FORMAT';
+          fileResult.errorMessage = error.message || 'Unsupported format';
+        } else {
+          fileResult.errorCode = 'CONVERSION_FAILED';
+          fileResult.errorMessage = error.message || 'Conversion failed';
         }
         
-        // If unsupported format error, reject immediately (no partial results)
-        if (error?.message?.includes('Unsupported')) {
-          throw error; // Re-throw to fail fast
-        }
-        
-        // Continue with other files for other errors
+        // Continue with other files - do NOT stop multi-file flow
       }
+      
+      fileResults.push(fileResult);
     }
     
     // If all files failed, throw error
-    if (convertedResults.length === 0) {
-      if (failedFiles.length > 0) {
-        throw new Error(`Failed to convert any files. Failed: ${failedFiles.join(', ')}`);
-      }
-      throw new Error('Failed to convert any files');
+    if (successfulPublicIds.length === 0) {
+      const failedDetails = fileResults.filter(r => !r.success).map(r => ({
+        file: r.originalName,
+        error: r.errorMessage,
+      }));
+      throw new Error(`Failed to convert any files. Details: ${JSON.stringify(failedDetails)}`);
     }
     
-    // If some files failed, log warning but continue
-    if (failedFiles.length > 0) {
-      console.warn(`[${requestId}] Some files failed to convert: ${failedFiles.join(', ')}. Continuing with ${convertedResults.length} successful conversions.`);
-    }
+    // Extract failed files details
+    const failedFiles = fileResults.filter(r => !r.success).map(r => r.originalName);
+    const failedDetails = fileResults.filter(r => !r.success).map(r => ({
+      file: r.originalName,
+      errorCode: r.errorCode,
+      errorMessage: r.errorMessage,
+    }));
 
-    // Extract public_ids for archive API
-    const publicIds = convertedResults.map(r => r.public_id);
+    // Create zip from successful conversions only
+    const publicIds = successfulPublicIds;
 
     // Create zip from converted files using Cloudinary archive API
     console.log(`[${requestId}] Creating zip from ${publicIds.length} converted files using Cloudinary archive API`);
@@ -195,7 +193,10 @@ export const convertService = {
       mode: 'multi',
       zipUrl: zipResult.url,
       meta: {
-        totalFiles: convertedResults.length,
+        totalFiles: files.length,
+        convertedFiles: successfulPublicIds.length,
+        failedFiles: failedFiles.length,
+        failedDetails: failedDetails,
       },
     };
   },

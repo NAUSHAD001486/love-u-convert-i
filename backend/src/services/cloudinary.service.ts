@@ -8,6 +8,7 @@ interface UploadResult {
   bytes: number;
   format: string;
   userFacingFormat?: string; // For jpeg → jpg mapping
+  userFacingPublicId?: string; // Public ID with user-facing extension for ZIP
 }
 
 // Format mapping: normalize user input to Cloudinary format
@@ -36,38 +37,34 @@ export const cloudinaryService = {
     ctx?: any
   ): Promise<UploadResult> {
     return new Promise((resolve, reject) => {
-      // Validate and normalize target format
+      // Normalize target format (jpeg → jpg for Cloudinary, but keep user-facing format)
       const targetFormatLower = targetFormat.toLowerCase();
       
-      // Check if format is supported
+      // Check if target format is supported
       if (!SUPPORTED_FORMATS.has(targetFormatLower)) {
         reject(new Error(`Unsupported target format: ${targetFormat}. Supported formats: ${Array.from(SUPPORTED_FORMATS).join(', ')}`));
         return;
       }
       
-      // Normalize target format (jpeg → jpg for Cloudinary, but keep user-facing format)
       const normalizedFormat = FORMAT_MAP[targetFormatLower];
       const userFacingFormat = targetFormatLower; // Keep original for filename
       
-      // Determine resource type based on file extension
+      // Accept ANY image/* input - no strict validation on input format
+      // Only validate target format
       const ext = filename.split('.').pop()?.toLowerCase() || '';
-      const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'psd', 'eps', 'tga', 'tiff'].includes(ext);
+      const isImage = true; // Accept any file, let Cloudinary handle it
       
-      // Reject unsupported input formats clearly
-      if (!isImage && ext && !['pdf', 'txt'].includes(ext)) {
-        reject(new Error(`Unsupported input file format: .${ext}. Please upload an image file.`));
-        return;
-      }
-      
+      // Generate public_id with user-facing extension for JPEG
+      // Note: Cloudinary will use the format from options.format, but we'll override public_id extension after upload
       const options: any = {
         folder: 'love-u-convert',
         use_filename: true,
         unique_filename: true,
-        resource_type: isImage ? 'image' : 'auto',
+        resource_type: 'image', // Always use image resource type
       };
 
-      // Only apply format conversion for images
-      if (isImage && normalizedFormat) {
+      // Apply format conversion
+      if (normalizedFormat) {
         options.format = normalizedFormat; // Use normalized format for Cloudinary
         
         // Special handling for ICO format (256×256, stable)
@@ -83,13 +80,15 @@ export const cloudinaryService = {
           ];
         }
         // Special handling for SVG format (sharper vectorization, less blur)
+        // SVG must NOT get global transforms (quality, width, height)
         else if (normalizedFormat === 'svg') {
           options.transformation = [
             {
               format: normalizedFormat,
               effect: 'vectorize',
-              colors: 64, // Increased to 64 for sharper, less blurry vectorization
-              corner_radius: 'max', // Smoother curves
+              colors: 128, // Increased to 128 for sharper vectorization
+              detail: 3.0, // Higher detail for sharper output
+              threshold: 0.3, // Threshold for vectorization
               despeckle: 0, // Disable despeckle to avoid blur
             },
           ];
@@ -121,12 +120,46 @@ export const cloudinaryService = {
 
       const uploadStream = cloudinary.uploader.upload_stream(
         options,
-        (error, result) => {
+        async (error, result) => {
           if (error) {
             reject(error);
           } else if (result) {
+            // For JPEG, rename public_id to have .jpeg extension instead of .jpg
+            let finalPublicId = result.public_id;
+            
+            if (userFacingFormat === 'jpeg' && normalizedFormat === 'jpg') {
+              // Determine user-facing extension
+              const userFacingExt = '.jpeg';
+              
+              // Remove existing extension and add user-facing extension
+              const publicIdWithoutExt = finalPublicId.replace(/\.[^/.]+$/, '');
+              const desiredPublicId = `${publicIdWithoutExt}${userFacingExt}`;
+              
+              // Rename the resource in Cloudinary to have .jpeg extension
+              try {
+                const renameResult = await cloudinary.uploader.rename(
+                  result.public_id,
+                  desiredPublicId,
+                  { resource_type: 'image' }
+                );
+                finalPublicId = renameResult.public_id;
+              } catch (renameError: any) {
+                // If rename fails, log but continue with original public_id
+                console.warn(`[${ctx?.requestId || 'unknown'}] Failed to rename ${result.public_id} to ${desiredPublicId}:`, renameError);
+                // Use desired public_id anyway for ZIP (Cloudinary might still serve it)
+                finalPublicId = desiredPublicId;
+              }
+            } else {
+              // For other formats, ensure extension matches user-facing format
+              const userFacingExt = `.${userFacingFormat}`;
+              if (!finalPublicId.endsWith(userFacingExt)) {
+                const publicIdWithoutExt = finalPublicId.replace(/\.[^/.]+$/, '');
+                finalPublicId = `${publicIdWithoutExt}${userFacingExt}`;
+              }
+            }
+            
             resolve({
-              public_id: result.public_id,
+              public_id: finalPublicId, // Use renamed public_id with correct extension
               secure_url: result.secure_url,
               bytes: result.bytes || 0,
               format: result.format || normalizedFormat || ext,
