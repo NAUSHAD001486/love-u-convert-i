@@ -34,6 +34,11 @@ export const cloudinaryService = {
         options.transformation = [
           {
             format: targetFormat,
+            quality: 'auto', // Auto quality optimization
+            fetch_format: 'auto', // Auto format selection for best quality/size ratio
+            width: 2048,
+            height: 2048,
+            crop: 'limit', // Maintain aspect ratio, only resize if larger than 2048px
           },
         ];
       }

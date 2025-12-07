@@ -169,14 +169,31 @@ export default function WebpToPngPage() {
                   </button>
                 </div>
               ) : (
-                <a
-                  href={result.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-block px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200"
-                >
-                  Download File
-                </a>
+                <div className="space-y-3">
+                  {isDownloading && (
+                    <div className="rounded-md bg-slate-800 border border-slate-700 px-4 py-3 text-sm text-slate-100 flex items-center gap-2">
+                      <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-400 border-t-transparent" />
+                      <span>Preparing your file for download…</span>
+                    </div>
+                  )}
+                  {downloadComplete && (
+                    <div className="rounded-md bg-green-800/50 border border-green-600 px-4 py-2 text-sm text-green-200">
+                      ✓ Download started! Check your downloads folder.
+                    </div>
+                  )}
+                  <button
+                    onClick={() => {
+                      // Extract filename from URL or use a default
+                      const urlParts = result.url.split('/');
+                      const filename = urlParts[urlParts.length - 1].split('?')[0] || `converted.${targetFormat}`;
+                      handleDownload(result.url, filename);
+                    }}
+                    disabled={isDownloading}
+                    className="inline-block px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-800 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors duration-200"
+                  >
+                    {isDownloading ? 'Preparing...' : 'Download File'}
+                  </button>
+                </div>
               )}
             </div>
           )}
