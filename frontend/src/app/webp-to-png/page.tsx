@@ -12,7 +12,7 @@ export default function WebpToPngPage() {
   const [isConverting, setIsConverting] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadComplete, setDownloadComplete] = useState(false);
-  const [result, setResult] = useState<{ mode: 'single' | 'multi'; url: string } | null>(null);
+  const [result, setResult] = useState<{ mode: 'single' | 'multi'; url: string; outputFormat?: string; originalName?: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleFilesSelected = (files: File[]) => {
@@ -71,7 +71,12 @@ export default function WebpToPngPage() {
 
       if (response.status === 'success') {
         if (response.mode === 'single') {
-          setResult({ mode: 'single', url: response.downloadUrl });
+          setResult({ 
+            mode: 'single', 
+            url: response.downloadUrl,
+            outputFormat: response.meta?.outputFormat,
+            originalName: response.meta?.originalName
+          });
         } else if (response.mode === 'multi') {
           setResult({ mode: 'multi', url: response.zipUrl });
         }
@@ -183,9 +188,11 @@ export default function WebpToPngPage() {
                   )}
                   <button
                     onClick={() => {
-                      // Extract filename from URL or use a default
-                      const urlParts = result.url.split('/');
-                      const filename = urlParts[urlParts.length - 1].split('?')[0] || `converted.${targetFormat}`;
+                      // Generate filename with proper extension
+                      const outputFormat = result.outputFormat || targetFormat;
+                      const originalName = result.originalName || 'converted';
+                      const baseName = originalName.replace(/\.[^/.]+$/, ''); // Remove original extension
+                      const filename = `${baseName}.${outputFormat}`;
                       handleDownload(result.url, filename);
                     }}
                     disabled={isDownloading}

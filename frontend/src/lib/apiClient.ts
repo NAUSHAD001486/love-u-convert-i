@@ -1,7 +1,7 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
 
 export type ConvertResponse =
-  | { status: 'success'; mode: 'single'; downloadUrl: string; meta?: any }
+  | { status: 'success'; mode: 'single'; downloadUrl: string; meta?: { outputFormat?: string; originalName?: string; [key: string]: any } }
   | { status: 'success'; mode: 'multi'; zipUrl: string; meta?: any }
   | { status: 'error'; code?: string; message: string };
 

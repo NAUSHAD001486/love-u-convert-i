@@ -27,12 +27,25 @@ export const convertService = {
       
       console.log(`[${requestId}] Converting single file: ${file.filename} to ${targetFormat}`);
       
+      // Check file size before uploading to Cloudinary (10MB limit on free tier)
+      const CLOUDINARY_MAX_SIZE = 10 * 1024 * 1024; // 10MB
+      if (file.size > CLOUDINARY_MAX_SIZE) {
+        // Special message for PSD files
+        if (targetFormat.toLowerCase() === 'psd') {
+          throw new Error(`PSD file "${file.filename}" is too large (${(file.size / (1024 * 1024)).toFixed(2)}MB). Cloudinary free tier limit is 10MB per file. Please use a smaller PSD file or upgrade your Cloudinary plan.`);
+        }
+        throw new Error(`File "${file.filename}" is too large (${(file.size / (1024 * 1024)).toFixed(2)}MB). Cloudinary free tier limit is 10MB per file.`);
+      }
+      
       const result = await cloudinaryService.uploadAndConvertStream(
         file.stream as any,
         file.filename,
         targetFormat,
         { requestId }
       );
+
+      // Get user-facing format (jpeg stays jpeg, not jpg)
+      const outputFormat = result.userFacingFormat || result.format || targetFormat;
 
       return {
         status: 'success',
@@ -42,6 +55,7 @@ export const convertService = {
           originalName: file.filename,
           convertedName: result.public_id,
           convertedSizeBytes: result.bytes,
+          outputFormat: outputFormat, // Include format for frontend filename
         },
       };
     }
@@ -64,9 +78,19 @@ export const convertService = {
           public_id: result.public_id,
           secure_url: result.secure_url,
         });
-      } catch (error) {
+      } catch (error: any) {
         console.error(`[${requestId}] Failed to convert ${file.filename}:`, error);
-        // Continue with other files
+        
+        // Check if it's a Cloudinary file size limit error
+        if (error?.message?.includes('File size too large') || error?.message?.includes('10485760') || error?.message?.includes('Maximum is')) {
+          // Special message for PSD files
+          if (targetFormat.toLowerCase() === 'psd') {
+            throw new Error(`PSD file "${file.filename}" is too large (${(file.size / (1024 * 1024)).toFixed(2)}MB). Cloudinary free tier limit is 10MB per file. Please use a smaller PSD file or upgrade your Cloudinary plan.`);
+          }
+          throw new Error(`File "${file.filename}" is too large for Cloudinary free tier (max 10MB). File size: ${(file.size / (1024 * 1024)).toFixed(2)}MB`);
+        }
+        
+        // Continue with other files for other errors
       }
     }
 
