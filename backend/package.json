@@ -24,9 +24,7 @@
     "ioredis": "^5.3.2",
     "multer": "^1.4.5-lts.1",
     "redis": "^4.6.10",
-    "uuid": "^9.0.1",
-    "yazl": "^2.5.1",
-    "archiver": "^7.0.1"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/busboy": "^1.5.4",
