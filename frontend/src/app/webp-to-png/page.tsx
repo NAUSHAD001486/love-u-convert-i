@@ -10,6 +10,8 @@ export default function WebpToPngPage() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [targetFormat, setTargetFormat] = useState<string>('png');
   const [isConverting, setIsConverting] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadComplete, setDownloadComplete] = useState(false);
   const [result, setResult] = useState<{ mode: 'single' | 'multi'; url: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,6 +23,9 @@ export default function WebpToPngPage() {
   };
 
   const handleDownload = async (url: string, filename: string) => {
+    setIsDownloading(true);
+    setDownloadComplete(false);
+    
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -35,10 +40,19 @@ export default function WebpToPngPage() {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
+      
+      setDownloadComplete(true);
+      // Clear confirmation message after 3 seconds
+      setTimeout(() => {
+        setDownloadComplete(false);
+      }, 3000);
     } catch (err) {
       console.error('Download error:', err);
+      setError('Download failed. Please try again.');
       // Fallback to direct link if blob download fails
       window.open(url, '_blank');
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -113,6 +127,13 @@ export default function WebpToPngPage() {
             />
           </div>
 
+          {isConverting && (
+            <div className="mt-4 rounded-md bg-slate-800 border border-slate-700 px-4 py-3 text-sm text-slate-100 flex items-center gap-2">
+              <span className="inline-block h-3 w-3 animate-ping rounded-full bg-blue-400" />
+              <span>Converting your files… please wait.</span>
+            </div>
+          )}
+
           {error && (
             <div className="p-4 bg-red-900/50 border border-red-700 rounded-lg">
               <p className="text-red-300 text-sm">{error}</p>
@@ -127,12 +148,26 @@ export default function WebpToPngPage() {
                   : 'Your ZIP file is ready!'}
               </p>
               {result.mode === 'multi' ? (
-                <button
-                  onClick={() => handleDownload(result.url, 'love-u-convert.zip')}
-                  className="inline-block px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200"
-                >
-                  Download ZIP
-                </button>
+                <div className="space-y-3">
+                  {isDownloading && (
+                    <div className="rounded-md bg-slate-800 border border-slate-700 px-4 py-3 text-sm text-slate-100 flex items-center gap-2">
+                      <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-400 border-t-transparent" />
+                      <span>Preparing your ZIP file… this may take 10–20 seconds.</span>
+                    </div>
+                  )}
+                  {downloadComplete && (
+                    <div className="rounded-md bg-green-800/50 border border-green-600 px-4 py-2 text-sm text-green-200">
+                      ✓ Download started! Check your downloads folder.
+                    </div>
+                  )}
+                  <button
+                    onClick={() => handleDownload(result.url, 'love-u-convert.zip')}
+                    disabled={isDownloading}
+                    className="inline-block px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-800 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors duration-200"
+                  >
+                    {isDownloading ? 'Preparing ZIP...' : 'Download ZIP'}
+                  </button>
+                </div>
               ) : (
                 <a
                   href={result.url}
