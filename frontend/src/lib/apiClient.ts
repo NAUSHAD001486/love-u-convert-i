@@ -24,8 +24,21 @@ export async function uploadAndConvert(
     body: form,
   });
 
+  // Check if response is HTML (404 page or error page)
+  const contentType = response.headers.get('content-type') || '';
+  const text = await response.text();
+  
+  if (text.trim().startsWith('<!DOCTYPE') || text.trim().startsWith('<!doctype')) {
+    throw new Error('Server returned HTML instead of JSON. Check API URL. Make sure backend is running on http://localhost:3000');
+  }
+
   // Parse JSON response
-  const data = await response.json();
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (parseError) {
+    throw new Error(`Failed to parse JSON response. Server returned: ${text.substring(0, 100)}...`);
+  }
 
   // If HTTP status is not 2xx, throw error
   if (!response.ok) {
