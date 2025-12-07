@@ -7,8 +7,7 @@ interface UploadResult {
   secure_url: string;
   bytes: number;
   format: string;
-  userFacingFormat?: string; // For jpeg → jpg mapping
-  userFacingPublicId?: string; // Public ID with user-facing extension for ZIP
+  userFacingFormat?: string; // For jpeg → jpg mapping (for frontend filename only)
 }
 
 // Format mapping: normalize user input to Cloudinary format
@@ -54,12 +53,18 @@ export const cloudinaryService = {
       const ext = filename.split('.').pop()?.toLowerCase() || '';
       const isImage = true; // Accept any file, let Cloudinary handle it
       
-      // Generate public_id with user-facing extension for JPEG
-      // Note: Cloudinary will use the format from options.format, but we'll override public_id extension after upload
+      // Generate simple public_id WITHOUT extension - let Cloudinary handle it
+      const baseName = filename.replace(/\.[^/.]+$/, '') || 'file';
+      const cleanName = baseName
+        .replace(/[^a-zA-Z0-9_-]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '') || 'file';
+      const uniqueId = `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+      const publicIdBase = `love-u-convert/${cleanName}_${uniqueId}`;
+      
       const options: any = {
         folder: 'love-u-convert',
-        use_filename: true,
-        unique_filename: true,
+        public_id: publicIdBase, // No extension - Cloudinary will add based on format
         resource_type: 'image', // Always use image resource type
       };
 
@@ -120,50 +125,17 @@ export const cloudinaryService = {
 
       const uploadStream = cloudinary.uploader.upload_stream(
         options,
-        async (error, result) => {
+        (error, result) => {
           if (error) {
             reject(error);
           } else if (result) {
-            // For JPEG, rename public_id to have .jpeg extension instead of .jpg
-            let finalPublicId = result.public_id;
-            
-            if (userFacingFormat === 'jpeg' && normalizedFormat === 'jpg') {
-              // Determine user-facing extension
-              const userFacingExt = '.jpeg';
-              
-              // Remove existing extension and add user-facing extension
-              const publicIdWithoutExt = finalPublicId.replace(/\.[^/.]+$/, '');
-              const desiredPublicId = `${publicIdWithoutExt}${userFacingExt}`;
-              
-              // Rename the resource in Cloudinary to have .jpeg extension
-              try {
-                const renameResult = await cloudinary.uploader.rename(
-                  result.public_id,
-                  desiredPublicId,
-                  { resource_type: 'image' }
-                );
-                finalPublicId = renameResult.public_id;
-              } catch (renameError: any) {
-                // If rename fails, log but continue with original public_id
-                console.warn(`[${ctx?.requestId || 'unknown'}] Failed to rename ${result.public_id} to ${desiredPublicId}:`, renameError);
-                // Use desired public_id anyway for ZIP (Cloudinary might still serve it)
-                finalPublicId = desiredPublicId;
-              }
-            } else {
-              // For other formats, ensure extension matches user-facing format
-              const userFacingExt = `.${userFacingFormat}`;
-              if (!finalPublicId.endsWith(userFacingExt)) {
-                const publicIdWithoutExt = finalPublicId.replace(/\.[^/.]+$/, '');
-                finalPublicId = `${publicIdWithoutExt}${userFacingExt}`;
-              }
-            }
-            
+            // Use Cloudinary's public_id EXACTLY as returned - no manipulation
             resolve({
-              public_id: finalPublicId, // Use renamed public_id with correct extension
-              secure_url: result.secure_url,
+              public_id: result.public_id, // Use exactly as Cloudinary returns it
+              secure_url: result.secure_url, // Use exactly as Cloudinary returns it
               bytes: result.bytes || 0,
               format: result.format || normalizedFormat || ext,
-              userFacingFormat: userFacingFormat, // Return user-facing format (jpeg stays jpeg)
+              userFacingFormat: userFacingFormat, // Return user-facing format (jpeg stays jpeg) for frontend filename only
             });
           } else {
             reject(new Error('Upload failed: no result'));
