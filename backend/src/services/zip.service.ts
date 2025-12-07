@@ -90,8 +90,19 @@ export const zipService = {
         uploadStream.end(zipBuffer);
       });
 
+      // Generate signed download URL for the ZIP file
+      // This prevents 401 errors when accessing raw resources
+      const downloadUrl = cloudinary.utils.private_download_url(
+        uploadResult.public_id,
+        'zip',
+        {
+          resource_type: 'raw',
+          type: 'upload',
+        }
+      );
+
       return {
-        url: uploadResult.secure_url,
+        url: downloadUrl,
         public_id: uploadResult.public_id,
       };
     } catch (err) {
