@@ -36,13 +36,28 @@ export const cloudinaryService = {
     ctx?: any
   ): Promise<UploadResult> {
     return new Promise((resolve, reject) => {
+      // Validate and normalize target format
+      const targetFormatLower = targetFormat.toLowerCase();
+      
+      // Check if format is supported
+      if (!SUPPORTED_FORMATS.has(targetFormatLower)) {
+        reject(new Error(`Unsupported target format: ${targetFormat}. Supported formats: ${Array.from(SUPPORTED_FORMATS).join(', ')}`));
+        return;
+      }
+      
       // Normalize target format (jpeg → jpg for Cloudinary, but keep user-facing format)
-      const normalizedFormat = FORMAT_MAP[targetFormat.toLowerCase()] || targetFormat.toLowerCase();
-      const userFacingFormat = targetFormat.toLowerCase(); // Keep original for filename
+      const normalizedFormat = FORMAT_MAP[targetFormatLower];
+      const userFacingFormat = targetFormatLower; // Keep original for filename
       
       // Determine resource type based on file extension
       const ext = filename.split('.').pop()?.toLowerCase() || '';
       const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'psd', 'eps', 'tga', 'tiff'].includes(ext);
+      
+      // Reject unsupported input formats clearly
+      if (!isImage && ext && !['pdf', 'txt'].includes(ext)) {
+        reject(new Error(`Unsupported input file format: .${ext}. Please upload an image file.`));
+        return;
+      }
       
       const options: any = {
         folder: 'love-u-convert',
@@ -67,14 +82,15 @@ export const cloudinaryService = {
             },
           ];
         }
-        // Special handling for SVG format (sharper vectorization)
+        // Special handling for SVG format (sharper vectorization, less blur)
         else if (normalizedFormat === 'svg') {
           options.transformation = [
             {
               format: normalizedFormat,
               effect: 'vectorize',
-              colors: 32, // Increased from 16 for sharper vectorization
+              colors: 64, // Increased to 64 for sharper, less blurry vectorization
               corner_radius: 'max', // Smoother curves
+              despeckle: 0, // Disable despeckle to avoid blur
             },
           ];
         }

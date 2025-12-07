@@ -12,7 +12,7 @@ export default function WebpToPngPage() {
   const [isConverting, setIsConverting] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadComplete, setDownloadComplete] = useState(false);
-  const [result, setResult] = useState<{ mode: 'single' | 'multi'; url: string; outputFormat?: string; originalName?: string } | null>(null);
+  const [result, setResult] = useState<{ mode: 'single' | 'multi'; url: string; outputFormat?: string; originalName?: string; downloadName?: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleFilesSelected = (files: File[]) => {
@@ -75,7 +75,8 @@ export default function WebpToPngPage() {
             mode: 'single', 
             url: response.downloadUrl,
             outputFormat: response.meta?.outputFormat,
-            originalName: response.meta?.originalName
+            originalName: response.meta?.originalName,
+            downloadName: response.meta?.downloadName
           });
         } else if (response.mode === 'multi') {
           setResult({ mode: 'multi', url: response.zipUrl });
@@ -188,11 +189,11 @@ export default function WebpToPngPage() {
                   )}
                   <button
                     onClick={() => {
-                      // Generate filename with proper extension
-                      const outputFormat = result.outputFormat || targetFormat;
-                      const originalName = result.originalName || 'converted';
-                      const baseName = originalName.replace(/\.[^/.]+$/, ''); // Remove original extension
-                      const filename = `${baseName}.${outputFormat}`;
+                      // Use downloadName from meta if available, otherwise generate
+                      const filename = result.downloadName || 
+                        (result.originalName 
+                          ? `${result.originalName.replace(/\.[^/.]+$/, '')}.${result.outputFormat || targetFormat}`
+                          : `converted.${result.outputFormat || targetFormat}`);
                       handleDownload(result.url, filename);
                     }}
                     disabled={isDownloading}
