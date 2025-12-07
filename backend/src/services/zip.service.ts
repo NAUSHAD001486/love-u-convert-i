@@ -65,14 +65,16 @@ export const zipService = {
       // Download files and create zip buffer
       const zipBuffer = await createSimpleZip(files);
 
+      // Generate unique ID for the zip file
+      const uniqueId = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+      const publicId = `love-u-convert/zips/file_${uniqueId}.zip`;
+
       // Upload zip to Cloudinary
       const uploadResult = await new Promise<any>((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
-            folder: 'love-u-convert/zips',
+            public_id: publicId,
             resource_type: 'raw',
-            use_filename: true,
-            unique_filename: true,
           },
           (error, result) => {
             if (error) {
