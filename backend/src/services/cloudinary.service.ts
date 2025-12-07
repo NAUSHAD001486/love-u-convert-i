@@ -84,17 +84,18 @@ export const cloudinaryService = {
             },
           ];
         }
-        // Special handling for SVG format (sharper vectorization, less blur)
+        // Special handling for SVG format (sharper vectorization, less blur, closer to raster)
         // SVG must NOT get global transforms (quality, width, height)
         else if (normalizedFormat === 'svg') {
           options.transformation = [
             {
               format: normalizedFormat,
               effect: 'vectorize',
-              colors: 128, // Increased to 128 for sharper vectorization
-              detail: 3.0, // Higher detail for sharper output
-              threshold: 0.3, // Threshold for vectorization
+              colors: 256, // Maximum colors for better color fidelity (was 128)
+              detail: 5.0, // Maximum detail for sharper output, closer to raster (was 3.0)
+              threshold: 0.1, // Lower threshold to preserve more detail (was 0.3)
               despeckle: 0, // Disable despeckle to avoid blur
+              corners: 40, // Smooth corners for better quality
             },
           ];
         }
