@@ -30,17 +30,43 @@ export const cloudinaryService = {
 
       // Only apply format conversion for images
       if (isImage && targetFormat) {
-        options.format = targetFormat;
-        options.transformation = [
-          {
-            format: targetFormat,
-            quality: 'auto', // Auto quality optimization
-            fetch_format: 'auto', // Auto format selection for best quality/size ratio
-            width: 2048,
-            height: 2048,
-            crop: 'limit', // Maintain aspect ratio, only resize if larger than 2048px
-          },
-        ];
+        options.format = targetFormat; // format takes priority
+        
+        // Special handling for ICO format
+        if (targetFormat === 'ico') {
+          options.transformation = [
+            {
+              format: targetFormat,
+              width: 256,
+              height: 256,
+              crop: 'pad',
+              background: 'white',
+            },
+          ];
+        }
+        // Special handling for SVG format
+        else if (targetFormat === 'svg') {
+          options.transformation = [
+            {
+              format: targetFormat,
+              effect: 'vectorize',
+              colors: 16,
+            },
+          ];
+        }
+        // Global transformation rules for all other formats
+        else {
+          options.transformation = [
+            {
+              format: targetFormat, // format takes priority
+              quality: 'auto:good', // Auto quality optimization (good balance)
+              fetch_format: targetFormat, // Ensure output format matches target
+              crop: 'limit', // Maintain aspect ratio, only resize if larger
+              width: 3000,
+              height: 3000,
+            },
+          ];
+        }
       }
 
       const uploadStream = cloudinary.uploader.upload_stream(
