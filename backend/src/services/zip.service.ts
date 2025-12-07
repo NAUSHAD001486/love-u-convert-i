@@ -1,113 +1,33 @@
-import { Readable } from 'stream';
-import got from 'got';
 import cloudinary from '../config/cloudinary';
-import { createWriteStream, readFileSync } from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
-import { unlink } from 'fs/promises';
-
-interface FileInfo {
-  name: string;
-  url: string;
-}
 
 interface ZipResult {
   url: string;
-  public_id: string;
-}
-
-// Simple zip implementation using Node's zlib and manual zip format
-// For production, use archiver or yazl when npm registry is available
-async function createSimpleZip(files: FileInfo[]): Promise<Buffer> {
-  const { createGzip } = await import('zlib');
-  const { pipeline } = await import('stream/promises');
-  
-  // For now, we'll use a temp file approach
-  // Download all files and create a simple archive
-  const tempDir = tmpdir();
-  const zipPath = join(tempDir, `zip-${Date.now()}.zip`);
-  
-  // This is a simplified version - in production use archiver
-  // For now, we'll create a tar.gz or use Cloudinary's multi-download feature
-  const buffers: Array<{ name: string; data: Buffer }> = [];
-  
-  for (const file of files) {
-    try {
-      const response = await got(file.url, {
-        timeout: { request: 30000 },
-      } as any);
-      buffers.push({ name: file.name, data: Buffer.from(response.body as any) });
-    } catch (err) {
-      console.error(`Failed to download ${file.url}:`, err);
-    }
-  }
-  
-  // Create a simple concatenated file (not a real zip, but works for testing)
-  // In production, replace with proper zip library
-  const zipBuffer = Buffer.concat(
-    buffers.map(b => Buffer.concat([
-      Buffer.from(`${b.name}\n`),
-      Buffer.from(`${b.data.length}\n`),
-      b.data,
-      Buffer.from('\n---FILE-END---\n')
-    ]))
-  );
-  
-  return zipBuffer;
 }
 
 export const zipService = {
-  async createZipFromUrls(
-    files: FileInfo[],
-    ctx?: any
+  async createZipFromPublicIds(
+    publicIds: string[],
+    ctx?: { requestId?: string }
   ): Promise<ZipResult> {
-    try {
-      // Download files and create zip buffer
-      const zipBuffer = await createSimpleZip(files);
+    const requestId = ctx?.requestId || `zip-${Date.now()}`;
+    console.log(`[${requestId}] Creating zip via Cloudinary archive API for ${publicIds.length} files`);
 
-      // Generate unique ID for the zip file
-      const uniqueId = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-      const publicId = `love-u-convert/zips/file_${uniqueId}.zip`;
+    const ts = Date.now();
+    const random = Math.random().toString(36).slice(2, 8);
+    const targetId = `love-u-convert/zips/file_${ts}_${random}`;
 
-      // Upload zip to Cloudinary
-      const uploadResult = await new Promise<any>((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          {
-            public_id: publicId,
-            resource_type: 'raw',
-          },
-          (error, result) => {
-            if (error) {
-              reject(error);
-            } else if (result) {
-              resolve(result);
-            } else {
-              reject(new Error('Zip upload failed: no result'));
-            }
-          }
-        );
+    const downloadUrl = cloudinary.utils.download_archive_url({
+      resource_type: 'image',
+      type: 'upload',
+      public_ids: publicIds,
+      target_public_id: targetId,
+      flatten_folders: true,
+      zip_file_name: `love-u-convert_${ts}.zip`,
+    });
 
-        uploadStream.end(zipBuffer);
-      });
+    console.log(`[${requestId}] Generated archive download URL: ${downloadUrl}`);
 
-      // Generate signed download URL for the ZIP file
-      // This prevents 401 errors when accessing raw resources
-      const downloadUrl = cloudinary.utils.private_download_url(
-        uploadResult.public_id,
-        'zip',
-        {
-          resource_type: 'raw',
-          type: 'upload',
-        }
-      );
-
-      return {
-        url: downloadUrl,
-        public_id: uploadResult.public_id,
-      };
-    } catch (err) {
-      throw err;
-    }
+    return { url: downloadUrl };
   },
 
   async createZip(files: Array<{ name: string; buffer: Buffer }>) {

@@ -49,7 +49,7 @@ export const convertService = {
     // Multiple files - convert all and create zip
     console.log(`[${requestId}] Converting ${files.length} files to ${targetFormat}`);
     
-    const convertedFiles: Array<{ name: string; url: string }> = [];
+    const convertedResults: Array<{ public_id: string; secure_url: string }> = [];
 
     for (const file of files) {
       try {
@@ -60,13 +60,9 @@ export const convertService = {
           { requestId }
         );
 
-        // Determine file extension for converted file
-        const extension = result.format || targetFormat;
-        const convertedName = `${file.filename.replace(/\.[^/.]+$/, '')}.${extension}`;
-
-        convertedFiles.push({
-          name: convertedName,
-          url: result.secure_url,
+        convertedResults.push({
+          public_id: result.public_id,
+          secure_url: result.secure_url,
         });
       } catch (error) {
         console.error(`[${requestId}] Failed to convert ${file.filename}:`, error);
@@ -74,20 +70,23 @@ export const convertService = {
       }
     }
 
-    if (convertedFiles.length === 0) {
+    if (convertedResults.length === 0) {
       throw new Error('Failed to convert any files');
     }
 
-    // Create zip from converted files
-    console.log(`[${requestId}] Creating zip from ${convertedFiles.length} converted files`);
-    const zipResult = await zipService.createZipFromUrls(convertedFiles, { requestId });
+    // Extract public_ids for archive API
+    const publicIds = convertedResults.map(r => r.public_id);
+
+    // Create zip from converted files using Cloudinary archive API
+    console.log(`[${requestId}] Creating zip from ${publicIds.length} converted files using Cloudinary archive API`);
+    const zipResult = await zipService.createZipFromPublicIds(publicIds, { requestId });
 
     return {
       status: 'success',
       mode: 'multi',
       zipUrl: zipResult.url,
       meta: {
-        totalFiles: convertedFiles.length,
+        totalFiles: convertedResults.length,
       },
     };
   },
