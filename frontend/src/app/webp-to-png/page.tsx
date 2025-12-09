@@ -548,6 +548,105 @@ export default function WebpToPngPage() {
                 )}
               </div>
             )}
+
+            {/* How to Convert Section - Always visible, below convert section, same width as dropzone */}
+            <div className="w-full rounded-lg py-6 px-4 md:px-6 mt-20 md:mt-24" style={{ backgroundColor: 'rgba(239, 238, 243, 0.4)' }}>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 text-center mb-4 opacity-60">
+                How to convert WebP to PNG
+              </h2>
+              <p className="text-sm md:text-base text-gray-600 text-center opacity-60 mb-8">
+                Quick and easy conversion in 3 simple steps:
+              </p>
+              
+              {/* Steps List - Left aligned */}
+              <div className="space-y-6 text-left">
+                {/* Step 1 */}
+                <div className="opacity-60">
+                  <div className="flex items-start gap-2 mb-2">
+                    <span className="font-bold text-gray-900">1. -</span>
+                    <span className="font-bold text-gray-900">Upload Files</span>
+                  </div>
+                  <p className="text-sm md:text-base text-gray-600 ml-6">
+                    Drag & drop WebP files or click 'Upload' to select from device.
+                  </p>
+                </div>
+
+                {/* Step 2 */}
+                <div className="opacity-60">
+                  <div className="flex items-start gap-2 mb-2">
+                    <span className="font-bold text-gray-900">2. -</span>
+                    <span className="font-bold text-gray-900">Convert</span>
+                  </div>
+                  <p className="text-sm md:text-base text-gray-600 ml-6">
+                    Click 'Convert' button to transform files to PNG format.
+                  </p>
+                </div>
+
+                {/* Step 3 */}
+                <div className="opacity-60">
+                  <div className="flex items-start gap-2 mb-2">
+                    <span className="font-bold text-gray-900">3. -</span>
+                    <span className="font-bold text-gray-900">Download</span>
+                  </div>
+                  <p className="text-sm md:text-base text-gray-600 ml-6">
+                    Single file: Click 'Download'. Multiple files: Click 'Download All' for ZIP.
+                  </p>
+                </div>
+              </div>
+
+              {/* Feature Cards Section - Immediately below steps */}
+              <div className="w-full mt-8 md:mt-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-7">
+                  {/* Card 1: Best WebP to PNG Converter */}
+                  <div className="bg-white rounded-lg shadow-md p-7 md:p-8 text-center min-h-[420px] flex flex-col opacity-70">
+                    {/* Trophy Icon */}
+                    <div className="flex justify-center mb-5">
+                      <span className="text-5xl">🏆</span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-gray-900 mb-3">
+                        Best WebP to PNG Converter
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Convert WebP to PNG with high quality. Our tool ensures excellent transparency and also helps convert animated WebP to PNG. Get reliable results instantly.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Card 2: SSL/TLS Encryption */}
+                  <div className="bg-white rounded-lg shadow-md p-7 md:p-8 text-center min-h-[420px] flex flex-col opacity-70">
+                    {/* Padlock Icon */}
+                    <div className="flex justify-center mb-5">
+                      <span className="text-5xl">🔒</span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-gray-900 mb-3">
+                        SSL/TLS Encryption
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Your privacy is our priority. All file transfers (uploads and downloads) are secured with SSL/TLS encryption, creating a private, encrypted channel between your device and our servers. They are fully protected from third-party access during transfer.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Card 3: Free, Fast & Secured */}
+                  <div className="bg-white rounded-lg shadow-md p-7 md:p-8 text-center min-h-[420px] flex flex-col opacity-70">
+                    {/* Lightning Bolt Icon */}
+                    <div className="flex justify-center mb-5">
+                      <span className="text-5xl">⚡</span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-gray-900 mb-3">
+                        Free, Fast & Secured
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Experience the difference with our free converter that runs quickly on any web browser. We guarantee file security and privacy. All files are protected by 256-bit SSL encryption and are automatically deleted from our servers within a few hours.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
