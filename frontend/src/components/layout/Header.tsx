@@ -1,24 +1,44 @@
-import Link from 'next/link';
+'use client';
+
+import { useState, useEffect } from 'react';
 
 export default function Header() {
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Show header at top or when scrolling up
+      if (currentScrollY < 10 || currentScrollY < lastScrollY) {
+        setIsVisible(true);
+      } 
+      // Hide header when scrolling down
+      else if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setIsVisible(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
   return (
-    <header className="border-b border-slate-800 bg-slate-900">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            Love U Convert
-          </Link>
-          <nav>
-            <Link
-              href="/webp-to-png"
-              className="text-slate-300 hover:text-white transition-colors px-4 py-2 rounded hover:bg-slate-800"
-            >
-              WebP to PNG
-            </Link>
-          </nav>
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 h-[50px] bg-white border-b border-gray-200 shadow-sm transition-transform duration-300 ease-in-out ${
+        isVisible ? 'translate-y-0' : '-translate-y-full opacity-0'
+      }`}
+    >
+      <div className="h-full max-w-7xl mx-auto px-4 flex items-center">
+        <div className="text-[#7C3AED] font-semibold text-lg">
+          Love U convert
         </div>
       </div>
     </header>
   );
 }
-

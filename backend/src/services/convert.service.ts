@@ -41,7 +41,7 @@ export const convertService = {
         file.stream as any,
         file.filename,
         targetFormat,
-        { requestId }
+        { requestId, mimeType: file.mimeType }
       );
 
       // Get user-facing format (jpeg stays jpeg, not jpg)
@@ -134,7 +134,7 @@ export const convertService = {
           file.stream as any,
           file.filename,
           targetFormat,
-          { requestId }
+          { requestId, mimeType: file.mimeType }
         );
 
         // Success

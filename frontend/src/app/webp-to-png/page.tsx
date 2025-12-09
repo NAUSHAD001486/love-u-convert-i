@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Header from '@/components/layout/Header';
 import FileDropzone from '@/components/converter/FileDropzone';
 import FormatSelector from '@/components/converter/FormatSelector';
-import ConvertButton from '@/components/converter/ConvertButton';
 import { uploadAndConvert } from '@/lib/apiClient';
 
 export default function WebpToPngPage() {
@@ -12,20 +12,58 @@ export default function WebpToPngPage() {
   const [isConverting, setIsConverting] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadComplete, setDownloadComplete] = useState(false);
-  const [result, setResult] = useState<{ mode: 'single' | 'multi'; url: string; outputFormat?: string; originalName?: string; downloadName?: string } | null>(null);
+  const [result, setResult] = useState<{
+    mode: 'single' | 'multi';
+    url: string;
+    outputFormat?: string;
+    originalName?: string;
+    downloadName?: string;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [thumbnails, setThumbnails] = useState<Map<number, string>>(new Map());
+  const [progress, setProgress] = useState(0);
+  const [progressStage, setProgressStage] = useState<string>('');
+
+  // Create thumbnails for image files
+  useEffect(() => {
+    const newThumbnails = new Map<number, string>();
+    selectedFiles.forEach((file, index) => {
+      if (file.type.startsWith('image/')) {
+        newThumbnails.set(index, URL.createObjectURL(file));
+      }
+    });
+    setThumbnails(newThumbnails);
+
+    // Cleanup thumbnails on unmount or when files change
+    return () => {
+      newThumbnails.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [selectedFiles]);
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  };
 
   const handleFilesSelected = (files: File[]) => {
     setSelectedFiles(Array.from(files));
-    // Clear previous results when new files are selected
     setResult(null);
     setError(null);
+  };
+
+  const handleRemoveFile = (index: number) => {
+    const newFiles = selectedFiles.filter((_, i) => i !== index);
+    setSelectedFiles(newFiles);
+    if (newFiles.length === 0) {
+      setResult(null);
+    }
   };
 
   const handleDownload = async (url: string, filename: string) => {
     setIsDownloading(true);
     setDownloadComplete(false);
-    
+
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -40,16 +78,14 @@ export default function WebpToPngPage() {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
-      
+
       setDownloadComplete(true);
-      // Clear confirmation message after 3 seconds
       setTimeout(() => {
         setDownloadComplete(false);
       }, 3000);
     } catch (err) {
       console.error('Download error:', err);
       setError('Download failed. Please try again.');
-      // Fallback to direct link if blob download fails
       window.open(url, '_blank');
     } finally {
       setIsDownloading(false);
@@ -65,25 +101,75 @@ export default function WebpToPngPage() {
     setIsConverting(true);
     setError(null);
     setResult(null);
+    setProgress(0);
+    setProgressStage('Uploading files...');
+
+    // Simulate progress for upload stage (1-40%)
+    const uploadInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev < 40) {
+          return prev + 2;
+        }
+        clearInterval(uploadInterval);
+        return 40;
+      });
+    }, 50);
 
     try {
+      setProgressStage('Processing...');
+      // Simulate progress for processing stage (40-70%)
+      const processInterval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev < 70 && prev >= 40) {
+            return prev + 1;
+          }
+          if (prev >= 70) {
+            clearInterval(processInterval);
+          }
+          return prev;
+        });
+      }, 100);
+
       const response = await uploadAndConvert(selectedFiles, targetFormat);
+      
+      clearInterval(processInterval);
+      setProgressStage('Converting...');
+      
+      // Simulate progress for converting stage (70-95%)
+      const convertInterval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev < 95) {
+            return prev + 1;
+          }
+          clearInterval(convertInterval);
+          return 95;
+        });
+      }, 80);
 
       if (response.status === 'success') {
-        if (response.mode === 'single') {
-          setResult({ 
-            mode: 'single', 
-            url: response.downloadUrl,
-            outputFormat: response.meta?.outputFormat,
-            originalName: response.meta?.originalName,
-            downloadName: response.meta?.downloadName
-          });
-        } else if (response.mode === 'multi') {
-          setResult({ mode: 'multi', url: response.zipUrl });
-        }
+        clearInterval(convertInterval);
+        setProgress(100);
+        setProgressStage('Complete!');
+        
+        setTimeout(() => {
+          if (response.mode === 'single') {
+            setResult({
+              mode: 'single',
+              url: response.downloadUrl,
+              outputFormat: response.meta?.outputFormat,
+              originalName: response.meta?.originalName,
+              downloadName: response.meta?.downloadName,
+            });
+          } else if (response.mode === 'multi') {
+            setResult({ mode: 'multi', url: response.zipUrl });
+          }
+          setProgress(0);
+          setProgressStage('');
+        }, 500);
       }
     } catch (err: any) {
-      // Handle network errors or API errors
+      setProgress(0);
+      setProgressStage('');
       if (err.message?.includes('fetch') || err.message?.includes('Network')) {
         setError('Network error: Could not connect to the server.');
       } else {
@@ -95,131 +181,248 @@ export default function WebpToPngPage() {
     }
   };
 
+  const handleDownloadClick = () => {
+    if (!result) return;
+
+    if (result.mode === 'single') {
+      const filename =
+        result.downloadName ||
+        (result.originalName
+          ? `${result.originalName.replace(/\.[^/.]+$/, '')}.${result.outputFormat || targetFormat}`
+          : `converted.${result.outputFormat || targetFormat}`);
+      handleDownload(result.url, filename);
+    } else {
+      handleDownload(result.url, 'love-u-convert.zip');
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold mb-4 text-center">
-          WebP to PNG Converter
-        </h1>
-        <p className="text-slate-400 text-center mb-8">
-          Convert your images to various formats
-        </p>
+    <>
+      <style jsx global>{`
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: #cbd5e1 #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f5f9;
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
+        }
+      `}</style>
+      <div className="min-h-screen bg-white">
+        <Header />
+      
+      <main className="pt-[50px] pb-16">
+        {/* Hero Title + Subtitle - Center, no background */}
+        <div className="text-center pt-8 md:pt-12 px-4">
+          <h1 className="text-3xl md:text-5xl font-bold text-[#7C3AED]">
+            WebP to PNG
+          </h1>
+          <p className="text-sm md:text-base text-slate-500 mt-[9px]">
+            The best and most advanced way to convert WebP to PNG for free.
+          </p>
+        </div>
 
-        <div className="bg-slate-800 rounded-lg p-8 space-y-6">
-          <FileDropzone onFilesSelected={handleFilesSelected} />
-
-          {selectedFiles.length > 0 && (
-            <div className="mt-4">
-              <p className="text-sm text-slate-400 mb-2">
-                Selected files ({selectedFiles.length}):
-              </p>
-              <ul className="space-y-1">
-                {selectedFiles.map((file, index) => (
-                  <li key={index} className="text-slate-300 text-sm">
-                    • {file.name} ({(file.size / 1024).toFixed(2)} KB)
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
-              Target Format
-            </label>
-            <FormatSelector
-              value={targetFormat}
-              onChange={(e) => setTargetFormat(e.target.value)}
+        {/* Main Converter Section */}
+        <div className="max-w-[1040px] mx-auto px-4 md:px-6">
+          {/* Dropzone Container - 40px below subtitle, leaves space for ads on sides */}
+          <div className="max-w-[790px] mx-auto mt-[40px] my-[5px]">
+            {/* Drag and Drop Zone */}
+            <FileDropzone
+              onFilesSelected={handleFilesSelected}
+              selectedFiles={selectedFiles}
+              onRemoveFile={handleRemoveFile}
             />
-          </div>
 
-          {isConverting && (
-            <div className="mt-4 rounded-md bg-slate-800 border border-slate-700 px-4 py-3 text-sm text-slate-100 flex items-center gap-2">
-              <span className="inline-block h-3 w-3 animate-ping rounded-full bg-blue-400" />
-              <span>Converting your files… please wait.</span>
-            </div>
-          )}
-
-          {error && (
-            <div className="p-4 bg-red-900/50 border border-red-700 rounded-lg">
-              <p className="text-red-300 text-sm">{error}</p>
-            </div>
-          )}
-
-          {result && (
-            <div className="p-4 bg-green-900/50 border border-green-700 rounded-lg">
-              <p className="text-green-300 text-sm mb-3">
-                {result.mode === 'single'
-                  ? 'Your file is ready!'
-                  : 'Your ZIP file is ready!'}
-              </p>
-              {result.mode === 'multi' ? (
-                <div className="space-y-3">
-                  {isDownloading && (
-                    <div className="rounded-md bg-slate-800 border border-slate-700 px-4 py-3 text-sm text-slate-100 flex items-center gap-2">
-                      <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-400 border-t-transparent" />
-                      <span>Preparing your ZIP file… this may take 10–20 seconds.</span>
-                    </div>
-                  )}
-                  {downloadComplete && (
-                    <div className="rounded-md bg-green-800/50 border border-green-600 px-4 py-2 text-sm text-green-200">
-                      ✓ Download started! Check your downloads folder.
-                    </div>
-                  )}
-                  <button
-                    onClick={() => handleDownload(result.url, 'love-u-convert.zip')}
-                    disabled={isDownloading}
-                    className="inline-block px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-800 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors duration-200"
-                  >
-                    {isDownloading ? 'Preparing ZIP...' : 'Download ZIP'}
-                  </button>
+            {/* File List - Below dropzone, same width, max 5 visible with scrolling */}
+            {selectedFiles.length > 0 && (
+              <div className="mt-4 relative">
+                {/* Left side solid line - matches container height */}
+                <div className="absolute left-0 top-0 bottom-0 w-0.5 flex items-center">
+                  <div className="h-full w-full border-l-2 border-solid border-gray-400 opacity-50"></div>
                 </div>
-              ) : (
-                <div className="space-y-3">
-                  {isDownloading && (
-                    <div className="rounded-md bg-slate-800 border border-slate-700 px-4 py-3 text-sm text-slate-100 flex items-center gap-2">
-                      <div className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-400 border-t-transparent" />
-                      <span>Preparing your file for download…</span>
+                <div className="max-h-[340px] overflow-y-auto space-y-0 pr-2 pl-5 custom-scrollbar">
+                  {selectedFiles.map((file, index) => {
+                  const thumbnail = thumbnails.get(index);
+                  return (
+                    <div
+                      key={index}
+                      className="w-full flex items-center gap-3 py-2 px-3 bg-[#ffffff] rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors shadow-md"
+                    >
+                      <div className="flex-shrink-0 w-10 h-10 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
+                        {thumbnail ? (
+                          <img
+                            src={thumbnail}
+                            alt={file.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="text-gray-400 text-xs font-medium">IMG</div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {file.name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {formatFileSize(file.size)}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          className="p-1.5 text-gray-400 hover:text-gray-600 transition-colors"
+                          title="Settings"
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleRemoveFile(index)}
+                          className="p-1.5 text-gray-400 hover:text-red-500 transition-colors"
+                          title="Remove"
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
-                  )}
-                  {downloadComplete && (
-                    <div className="rounded-md bg-green-800/50 border border-green-600 px-4 py-2 text-sm text-green-200">
-                      ✓ Download started! Check your downloads folder.
-                    </div>
-                  )}
-                  <button
-                    onClick={() => {
-                      // Use downloadName from meta if available, otherwise generate
-                      const filename = result.downloadName || 
-                        (result.originalName 
-                          ? `${result.originalName.replace(/\.[^/.]+$/, '')}.${result.outputFormat || targetFormat}`
-                          : `converted.${result.outputFormat || targetFormat}`);
-                      handleDownload(result.url, filename);
-                    }}
-                    disabled={isDownloading}
-                    className="inline-block px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-800 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors duration-200"
-                  >
-                    {isDownloading ? 'Preparing...' : 'Download File'}
-                  </button>
+                  );
+                  })}
                 </div>
-              )}
-            </div>
-          )}
+                {/* Scrolling indicator - shows when more than 5 files */}
+                {selectedFiles.length > 5 && (
+                  <div className="absolute bottom-0 left-0 right-2 h-16 pointer-events-none flex items-end justify-center pb-2">
+                    <div className="bg-gradient-to-t from-white via-white/80 to-transparent w-full h-full flex items-end justify-center">
+                      <div className="flex flex-col items-center gap-1 mb-2">
+                        <div className="w-1 h-6 bg-gray-400 rounded-full opacity-60"></div>
+                        <div className="w-1 h-4 bg-gray-400 rounded-full opacity-40"></div>
+                        <div className="w-1 h-2 bg-gray-400 rounded-full opacity-30"></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
-          <ConvertButton
-            disabled={isConverting || selectedFiles.length === 0}
-            isLoading={isConverting}
-            onClick={handleConvert}
-          />
+            {/* Error Message */}
+            {error && (
+              <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+            )}
 
-          <div className="mt-8 p-4 bg-slate-900 rounded border border-slate-700">
-            <p className="text-sm text-slate-400">
-              <strong className="text-slate-300">Backend API:</strong> calling{' '}
-              <code className="text-blue-400">/api/convert</code> (implemented on AWS).
-            </p>
+            {/* Convert Section - Only show if files are selected, below dropzone */}
+            {selectedFiles.length > 0 && (
+              <div className="mt-[15px] space-y-4">
+                {/* Settings Bar (Output Format) - Right aligned above button */}
+                <div className="flex justify-end items-center gap-2">
+                  <label className="text-sm font-medium text-gray-700">Output:</label>
+                  <FormatSelector
+                    value={targetFormat}
+                    onChange={setTargetFormat}
+                  />
+                </div>
+
+                {/* Progress Bar - Shows during conversion, above button */}
+                {(isConverting || progress > 0) && (
+                  <div className="space-y-2">
+                    <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                      <div
+                        className="bg-gradient-to-r from-[#7D3CFF] to-[#A066FF] h-full rounded-full transition-all duration-300 ease-out flex items-center justify-end pr-2"
+                        style={{ width: `${progress}%` }}
+                      >
+                        {progress > 10 && (
+                          <span className="text-xs text-white font-medium">{progress}%</span>
+                        )}
+                      </div>
+                    </div>
+                    {progressStage && (
+                      <p className="text-sm text-gray-600 text-center">{progressStage}</p>
+                    )}
+                  </div>
+                )}
+
+                {/* Convert / Download Button - Same width as dropzone, 15px high (margin) */}
+                <button
+                  onClick={result ? handleDownloadClick : handleConvert}
+                  disabled={isConverting || isDownloading}
+                  className={`w-full h-12 md:h-14 rounded-lg font-semibold text-white transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-[1.01] ${
+                    result
+                      ? 'bg-[#6D28D9] hover:bg-[#5B21B6]'
+                      : isConverting || isDownloading
+                      ? 'bg-[#7C3AEE]/70 cursor-not-allowed'
+                      : 'bg-[#7C3AEE] hover:bg-[#6D28D9]'
+                  }`}
+                >
+                  {isConverting || isDownloading ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>
+                        {isDownloading
+                          ? result?.mode === 'multi'
+                            ? 'Preparing ZIP...'
+                            : 'Preparing...'
+                          : 'Converting...'}
+                      </span>
+                    </div>
+                  ) : result ? (
+                    'Download'
+                  ) : (
+                    'Convert'
+                  )}
+                </button>
+
+                {/* Download Complete Message */}
+                {downloadComplete && (
+                  <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-center">
+                    <p className="text-sm text-green-700">
+                      ✓ Download started! Check your downloads folder.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
+      </main>
       </div>
-    </div>
+    </>
   );
 }

@@ -48,6 +48,10 @@ export const cloudinaryService = {
       const normalizedFormat = FORMAT_MAP[targetFormatLower];
       const userFacingFormat = targetFormatLower; // Keep original for filename
       
+      // Get mimeType from context to detect existing SVG input
+      const inputMimeType = ctx?.mimeType || '';
+      const isInputSvg = inputMimeType === 'image/svg+xml' || filename.toLowerCase().endsWith('.svg');
+      
       // Accept ANY image/* input - no strict validation on input format
       // Only validate target format
       const ext = filename.split('.').pop()?.toLowerCase() || '';
@@ -84,20 +88,22 @@ export const cloudinaryService = {
             },
           ];
         }
-        // Special handling for SVG format (sharper vectorization, less blur, closer to raster)
+        // Special handling for SVG format
         // SVG must NOT get global transforms (quality, width, height)
         else if (normalizedFormat === 'svg') {
-          options.transformation = [
-            {
-              format: normalizedFormat,
-              effect: 'vectorize',
-              colors: 256, // Maximum colors for better color fidelity (was 128)
-              detail: 5.0, // Maximum detail for sharper output, closer to raster (was 3.0)
-              threshold: 0.1, // Lower threshold to preserve more detail (was 0.3)
-              despeckle: 0, // Disable despeckle to avoid blur
-              corners: 40, // Smooth corners for better quality
-            },
-          ];
+          // If input is already SVG, skip vectorization to avoid quality loss
+          if (isInputSvg) {
+            options.format = normalizedFormat;
+            options.transformation = []; // No transformation for existing SVGs
+          } else {
+            // For raster → SVG: use max-detail vectorize
+            options.transformation = [
+              {
+                format: normalizedFormat,
+                effect: 'vectorize:colors:256:detail:4.0:despeckle:0',
+              },
+            ];
+          }
         }
         // Special handling for PSD (graceful error handling will be in convert.service)
         else if (normalizedFormat === 'psd') {

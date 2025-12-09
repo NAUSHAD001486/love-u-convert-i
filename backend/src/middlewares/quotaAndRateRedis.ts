@@ -174,11 +174,14 @@ export const quotaAndRateRedis = async (
     if (status === 'DAILY_LIMIT_EXCEEDED') {
       const newQuota = args[0];
       
+      // Calculate limit in GB for error message
+      const limitGB = (dailyBytesLimit / (1024 * 1024 * 1024)).toFixed(1);
+      
       return res.status(429).json({
         success: false,
         error: {
           code: 'DAILY_LIMIT_REACHED',
-          message: 'Daily 1.5GB limit reached',
+          message: `Daily ${limitGB}GB limit reached`,
           quota: newQuota,
         },
       });
