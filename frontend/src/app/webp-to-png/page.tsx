@@ -23,6 +23,8 @@ export default function WebpToPngPage() {
   const [thumbnails, setThumbnails] = useState<Map<number, string>>(new Map());
   const [progress, setProgress] = useState(0);
   const [progressStage, setProgressStage] = useState<string>('');
+  const [currentFileIndex, setCurrentFileIndex] = useState(0);
+  const [totalFiles, setTotalFiles] = useState(0);
 
   // Create thumbnails for image files
   useEffect(() => {
@@ -101,57 +103,177 @@ export default function WebpToPngPage() {
     setIsConverting(true);
     setError(null);
     setResult(null);
-    setProgress(0);
-    setProgressStage('Uploading files...');
+    setTotalFiles(selectedFiles.length);
 
-    // Simulate progress for upload stage (1-40%)
-    const uploadInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev < 40) {
-          return prev + 2;
+    // Single file: simple progress (no counting)
+    if (selectedFiles.length === 1) {
+      setProgress(1);
+      setProgressStage('Uploading files...');
+
+      let progressInterval: NodeJS.Timeout | null = null;
+      let isComplete = false;
+
+      // Continuous smooth progress from 1-95%
+      const startProgress = () => {
+        progressInterval = setInterval(() => {
+          setProgress((prev) => {
+            if (isComplete) {
+              if (progressInterval) clearInterval(progressInterval);
+              return prev;
+            }
+            // Slow down as we approach 95%
+            if (prev >= 90) {
+              return Math.min(prev + 0.3, 95);
+            } else if (prev >= 70) {
+              return Math.min(prev + 0.5, 95);
+            } else if (prev >= 40) {
+              return Math.min(prev + 0.8, 95);
+            } else {
+              return Math.min(prev + 1.2, 95);
+            }
+          });
+        }, 60);
+      };
+
+      startProgress();
+
+      try {
+        // Update stage messages as progress moves
+        setTimeout(() => setProgressStage('Processing...'), 2000);
+        setTimeout(() => setProgressStage('Converting...'), 5000);
+
+        const response = await uploadAndConvert(selectedFiles, targetFormat);
+
+        if (response.status === 'success') {
+          isComplete = true;
+          if (progressInterval) clearInterval(progressInterval);
+          
+          setProgressStage('Finalizing...');
+          
+          // Smoothly complete to 100%
+          const completeInterval = setInterval(() => {
+            setProgress((prev) => {
+              if (prev >= 100) {
+                clearInterval(completeInterval);
+                return 100;
+              }
+              return Math.min(prev + 2, 100);
+            });
+          }, 50);
+
+          setTimeout(() => {
+            if (response.mode === 'single') {
+              setResult({
+                mode: 'single',
+                url: response.downloadUrl,
+                outputFormat: response.meta?.outputFormat,
+                originalName: response.meta?.originalName,
+                downloadName: response.meta?.downloadName,
+              });
+            } else if (response.mode === 'multi') {
+              setResult({ mode: 'multi', url: response.zipUrl });
+            }
+            setProgress(0);
+            setProgressStage('');
+          }, 1000);
         }
-        clearInterval(uploadInterval);
-        return 40;
-      });
-    }, 50);
+      } catch (err: any) {
+        isComplete = true;
+        if (progressInterval) clearInterval(progressInterval);
+        setProgress(0);
+        setProgressStage('');
+        if (err.message?.includes('fetch') || err.message?.includes('Network')) {
+          setError('Network error: Could not connect to the server.');
+        } else {
+          setError(err.message || 'Conversion failed. Please try again.');
+        }
+        console.error('Conversion error:', err);
+      } finally {
+        setIsConverting(false);
+      }
+    } else {
+      // Multiple files: process one by one with individual progress bars
+      const processFileWithProgress = async (fileIndex: number, apiPromise: Promise<any>): Promise<void> => {
+        return new Promise((resolve) => {
+          setCurrentFileIndex(fileIndex);
+          setProgress(1);
+          setProgressStage(`Uploading file ${fileIndex + 1} of ${selectedFiles.length}...`);
 
-    try {
-      setProgressStage('Processing...');
-      // Simulate progress for processing stage (40-70%)
-      const processInterval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev < 70 && prev >= 40) {
-            return prev + 1;
-          }
-          if (prev >= 70) {
-            clearInterval(processInterval);
-          }
-          return prev;
+          let progressInterval: NodeJS.Timeout | null = null;
+          let isComplete = false;
+
+          // Continuous smooth progress from 1-95%
+          const startProgress = () => {
+            progressInterval = setInterval(() => {
+              setProgress((prev) => {
+                if (isComplete) {
+                  if (progressInterval) clearInterval(progressInterval);
+                  return prev;
+                }
+                // Slow down as we approach 95%
+                if (prev >= 90) {
+                  return Math.min(prev + 0.3, 95);
+                } else if (prev >= 70) {
+                  return Math.min(prev + 0.5, 95);
+                } else if (prev >= 40) {
+                  return Math.min(prev + 0.8, 95);
+                } else {
+                  return Math.min(prev + 1.2, 95);
+                }
+              });
+            }, 60);
+          };
+
+          startProgress();
+
+          // Update stage messages as progress moves
+          setTimeout(() => setProgressStage(`Processing file ${fileIndex + 1} of ${selectedFiles.length}...`), 2000);
+          setTimeout(() => setProgressStage(`Converting file ${fileIndex + 1} of ${selectedFiles.length}...`), 5000);
+
+          // Wait for API call to complete (like single file)
+          apiPromise.then(() => {
+            isComplete = true;
+            if (progressInterval) clearInterval(progressInterval);
+            
+            setProgressStage(`Finalizing file ${fileIndex + 1} of ${selectedFiles.length}...`);
+            
+            // Smoothly complete to 100% only after API completes
+            const completeInterval = setInterval(() => {
+              setProgress((prev) => {
+                if (prev >= 100) {
+                  clearInterval(completeInterval);
+                  resolve();
+                  return 100;
+                }
+                return Math.min(prev + 2, 100);
+              });
+            }, 50);
+          }).catch(() => {
+            isComplete = true;
+            if (progressInterval) clearInterval(progressInterval);
+            resolve();
+          });
         });
-      }, 100);
+      };
 
-      const response = await uploadAndConvert(selectedFiles, targetFormat);
-      
-      clearInterval(processInterval);
-      setProgressStage('Converting...');
-      
-      // Simulate progress for converting stage (70-95%)
-      const convertInterval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev < 95) {
-            return prev + 1;
+      try {
+        // Start API call immediately (don't wait for simulated progress)
+        const apiPromise = uploadAndConvert(selectedFiles, targetFormat);
+
+        // Process all files sequentially with individual progress
+        // Each file shows progress, but we wait for actual API completion
+        for (let i = 0; i < selectedFiles.length; i++) {
+          await processFileWithProgress(i, apiPromise);
+          // Small delay between files for visual effect
+          if (i < selectedFiles.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, 200));
           }
-          clearInterval(convertInterval);
-          return 95;
-        });
-      }, 80);
+        }
 
-      if (response.status === 'success') {
-        clearInterval(convertInterval);
-        setProgress(100);
-        setProgressStage('Complete!');
-        
-        setTimeout(() => {
+        // Wait for actual API response
+        const response = await apiPromise;
+
+        if (response.status === 'success') {
           if (response.mode === 'single') {
             setResult({
               mode: 'single',
@@ -165,19 +287,19 @@ export default function WebpToPngPage() {
           }
           setProgress(0);
           setProgressStage('');
-        }, 500);
+        }
+      } catch (err: any) {
+        setProgress(0);
+        setProgressStage('');
+        if (err.message?.includes('fetch') || err.message?.includes('Network')) {
+          setError('Network error: Could not connect to the server.');
+        } else {
+          setError(err.message || 'Conversion failed. Please try again.');
+        }
+        console.error('Conversion error:', err);
+      } finally {
+        setIsConverting(false);
       }
-    } catch (err: any) {
-      setProgress(0);
-      setProgressStage('');
-      if (err.message?.includes('fetch') || err.message?.includes('Network')) {
-        setError('Network error: Could not connect to the server.');
-      } else {
-        setError(err.message || 'Conversion failed. Please try again.');
-      }
-      console.error('Conversion error:', err);
-    } finally {
-      setIsConverting(false);
     }
   };
 
@@ -363,19 +485,24 @@ export default function WebpToPngPage() {
                 {/* Progress Bar - Shows during conversion, above button */}
                 {(isConverting || progress > 0) && (
                   <div className="space-y-2">
+                    {progressStage && (
+                      <p className="text-sm text-gray-600 text-center">{progressStage}</p>
+                    )}
+                    {totalFiles > 1 && (
+                      <p className="text-xs text-gray-500 text-center">
+                        File {currentFileIndex + 1} of {totalFiles}
+                      </p>
+                    )}
                     <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
                       <div
                         className="bg-gradient-to-r from-[#7D3CFF] to-[#A066FF] h-full rounded-full transition-all duration-300 ease-out flex items-center justify-end pr-2"
                         style={{ width: `${progress}%` }}
                       >
                         {progress > 10 && (
-                          <span className="text-xs text-white font-medium">{progress}%</span>
+                          <span className="text-xs text-white font-medium">{Math.floor(progress)}%</span>
                         )}
                       </div>
                     </div>
-                    {progressStage && (
-                      <p className="text-sm text-gray-600 text-center">{progressStage}</p>
-                    )}
                   </div>
                 )}
 
@@ -385,7 +512,7 @@ export default function WebpToPngPage() {
                   disabled={isConverting || isDownloading}
                   className={`w-full h-12 md:h-14 rounded-lg font-semibold text-white transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-[1.01] ${
                     result
-                      ? 'bg-[#6D28D9] hover:bg-[#5B21B6]'
+                      ? 'bg-black hover:bg-gray-800'
                       : isConverting || isDownloading
                       ? 'bg-[#7C3AEE]/70 cursor-not-allowed'
                       : 'bg-[#7C3AEE] hover:bg-[#6D28D9]'
@@ -403,9 +530,11 @@ export default function WebpToPngPage() {
                       </span>
                     </div>
                   ) : result ? (
-                    'Download'
-                  ) : (
+                    result.mode === 'single' ? 'Download' : 'Download all'
+                  ) : selectedFiles.length === 1 ? (
                     'Convert'
+                  ) : (
+                    'Convert all'
                   )}
                 </button>
 
