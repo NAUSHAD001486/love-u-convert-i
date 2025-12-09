@@ -25,6 +25,7 @@ export default function WebpToPngPage() {
   const [progressStage, setProgressStage] = useState<string>('');
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
   const [totalFiles, setTotalFiles] = useState(0);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   // Create thumbnails for image files
   useEffect(() => {
@@ -346,7 +347,7 @@ export default function WebpToPngPage() {
       <main className="pt-[50px] pb-16">
         {/* Hero Title + Subtitle - Center, no background */}
         <div className="text-center pt-8 md:pt-12 px-4">
-          <h1 className="text-3xl md:text-5xl font-bold text-[#7C3AED]">
+          <h1 className="text-[2.16rem] md:text-[3.45rem] font-bold text-black">
             WebP to PNG
           </h1>
           <p className="text-sm md:text-base text-slate-500 mt-[9px]">
@@ -650,6 +651,267 @@ export default function WebpToPngPage() {
           </div>
         </div>
       </main>
+
+      {/* Frequently Asked Questions Section - Outside main container */}
+      <section className="w-full py-16 md:py-20 px-4">
+        <div className="max-w-[1040px] mx-auto px-4 md:px-6">
+          {/* Inner container to match "How to convert" section width */}
+          <div className="max-w-[790px] mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-black text-center mb-12 md:mb-16">
+              Frequently Asked Questions (FAQs)
+            </h2>
+            
+            {/* FAQ Accordion */}
+            <div className="space-y-0">
+            {/* FAQ Item 1 */}
+            <div className="border-b border-gray-200 rounded-lg shadow-sm opacity-90">
+              <button
+                onClick={() => setOpenFaqIndex(openFaqIndex === 0 ? null : 0)}
+                className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
+              >
+                <span className="font-bold text-gray-900 text-base md:text-lg">
+                  What is WebP image?
+                </span>
+                <svg
+                  className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${
+                    openFaqIndex === 0 ? 'rotate-180' : ''
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {openFaqIndex === 0 && (
+                <div className="px-4 pb-4 bg-white rounded-b-lg">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                    WebP is a modern image format, developed by Google, designed to make the web faster. It uses smart compression techniques to create significantly smaller, richer images than older formats like JPG or PNG, which drastically improves website load times and saves bandwidth.
+                    <br /><br />
+                    This versatile format is ideal for modern graphics because it fully supports both transparency and animation.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* FAQ Item 2 */}
+            <div className="border-b border-gray-200 rounded-lg shadow-sm opacity-90">
+              <button
+                onClick={() => setOpenFaqIndex(openFaqIndex === 1 ? null : 1)}
+                className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
+              >
+                <span className="font-bold text-gray-900 text-base md:text-lg">
+                  What is PNG image?
+                </span>
+                <svg
+                  className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${
+                    openFaqIndex === 1 ? 'rotate-180' : ''
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {openFaqIndex === 1 && (
+                <div className="px-4 pb-4 bg-white rounded-b-lg">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                    PNG (Portable Network Graphics) is one of the most popular and essential image formats on the internet. It's best known for its ability to handle lossless compression, which means the image quality remains perfect every time the file is saved or opened—you never lose any detail.
+                    <br /><br />
+                    Most importantly, PNG fully supports transparency (alpha channels). This feature is crucial for web design, allowing logos, icons, and graphics to have smooth, non-jagged edges and blend seamlessly over any background color or image.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* FAQ Item 3 */}
+            <div className="border-b border-gray-200 rounded-lg shadow-sm opacity-90">
+              <button
+                onClick={() => setOpenFaqIndex(openFaqIndex === 2 ? null : 2)}
+                className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
+              >
+                <span className="font-bold text-gray-900 text-base md:text-lg">
+                  When should you use the WebP format?
+                </span>
+                <svg
+                  className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${
+                    openFaqIndex === 2 ? 'rotate-180' : ''
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {openFaqIndex === 2 && (
+                <div className="px-4 pb-4 bg-white rounded-b-lg">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                    You should use WebP whenever website performance and loading speed are your primary concern. Since WebP files are significantly smaller than traditional JPGs or PNGs, adopting this format is the best way to reduce page load times, which greatly improves the user experience and boosts your SEO.
+                    <br /><br />
+                    Moreover, WebP is the ideal choice when you need a single, versatile format that offers high-quality compression along with support for both transparency (like a PNG) and animation (like a GIF). Essentially, if the image is going on the web, using WebP is the smart modern choice.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* FAQ Item 4 */}
+            <div className="border-b border-gray-200 rounded-lg shadow-sm opacity-90">
+              <button
+                onClick={() => setOpenFaqIndex(openFaqIndex === 3 ? null : 3)}
+                className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
+              >
+                <span className="font-bold text-gray-900 text-base md:text-lg">
+                  When should you use the PNG format?
+                </span>
+                <svg
+                  className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${
+                    openFaqIndex === 3 ? 'rotate-180' : ''
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {openFaqIndex === 3 && (
+                <div className="px-4 pb-4 bg-white rounded-b-lg">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                    You should use PNG when perfect quality and transparency are critical. It's the best choice for logos, icons, and sharp graphics because it uses lossless compression (meaning zero quality loss) and handles transparent backgrounds flawlessly—something a JPG can't do.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* FAQ Item 5 */}
+            <div className="border-b border-gray-200 rounded-lg shadow-sm opacity-90">
+              <button
+                onClick={() => setOpenFaqIndex(openFaqIndex === 4 ? null : 4)}
+                className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
+              >
+                <span className="font-bold text-gray-900 text-base md:text-lg">
+                  Is it free to convert WebP to PNG using Love U Convert?
+                </span>
+                <svg
+                  className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${
+                    openFaqIndex === 4 ? 'rotate-180' : ''
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {openFaqIndex === 4 && (
+                <div className="px-4 pb-4 bg-white rounded-b-lg">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                    Yes, Love U Convert converts WebP to PNG for free.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* FAQ Item 6 */}
+            <div className="border-b border-gray-200 rounded-lg shadow-sm opacity-90">
+              <button
+                onClick={() => setOpenFaqIndex(openFaqIndex === 5 ? null : 5)}
+                className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
+              >
+                <span className="font-bold text-gray-900 text-base md:text-lg">
+                  Are all my files safe when converting WebP to PNG?
+                </span>
+                <svg
+                  className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${
+                    openFaqIndex === 5 ? 'rotate-180' : ''
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {openFaqIndex === 5 && (
+                <div className="px-4 pb-4 bg-white rounded-b-lg">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                    Yes, Love U Convert's WebP to PNG converter secures all file transfers (uploads and downloads) with SSL/TLS encryption.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* FAQ Item 7 */}
+            <div className="border-b border-gray-200 rounded-lg shadow-sm opacity-90">
+              <button
+                onClick={() => setOpenFaqIndex(openFaqIndex === 6 ? null : 6)}
+                className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
+              >
+                <span className="font-bold text-gray-900 text-base md:text-lg">
+                  Do I need to install any software/app to convert WebP to PNG?
+                </span>
+                <svg
+                  className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${
+                    openFaqIndex === 6 ? 'rotate-180' : ''
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {openFaqIndex === 6 && (
+                <div className="px-4 pb-4 bg-white rounded-b-lg">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                    No, you don't need to install any software/app to convert WebP to PNG. The conversion happens directly in your web browser.
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* FAQ Item 8 */}
+            <div className="border-b border-gray-200 rounded-lg shadow-sm opacity-90">
+              <button
+                onClick={() => setOpenFaqIndex(openFaqIndex === 7 ? null : 7)}
+                className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
+              >
+                <span className="font-bold text-gray-900 text-base md:text-lg">
+                  Can I convert multiple WebP files to PNG at once?
+                </span>
+                <svg
+                  className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${
+                    openFaqIndex === 7 ? 'rotate-180' : ''
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {openFaqIndex === 7 && (
+                <div className="px-4 pb-4 bg-white rounded-b-lg">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                    Absolutely! Our tool is built for maximum efficiency and handles batch conversions effortlessly.
+                    <br /><br />
+                    You can upload as many WebP files as you need simultaneously. Once the conversion is done:
+                    <br /><br />
+                    If you uploaded just one file, you can download the resulting PNG directly.
+                    <br /><br />
+                    If you uploaded multiple files, the tool automatically bundles all your new PNGs into a single, convenient ZIP file for quick download.
+                    <br /><br />
+                    This saves you a ton of time compared to converting images one by one!
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+          </div>
+        </div>
+      </section>
       </div>
     </>
   );
