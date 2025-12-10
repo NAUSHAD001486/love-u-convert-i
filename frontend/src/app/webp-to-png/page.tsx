@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Header from '@/components/layout/Header';
 import FileDropzone from '@/components/converter/FileDropzone';
 import FormatSelector from '@/components/converter/FormatSelector';
@@ -26,6 +26,10 @@ export default function WebpToPngPage() {
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
   const [totalFiles, setTotalFiles] = useState(0);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [showComingSoon, setShowComingSoon] = useState(false);
+  const languageDropdownRef = useRef<HTMLDivElement>(null);
 
   // Create thumbnails for image files
   useEffect(() => {
@@ -42,6 +46,36 @@ export default function WebpToPngPage() {
       newThumbnails.forEach((url) => URL.revokeObjectURL(url));
     };
   }, [selectedFiles]);
+
+  // Close language dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (languageDropdownRef.current && !languageDropdownRef.current.contains(event.target as Node)) {
+        setShowLanguageDropdown(false);
+      }
+    };
+
+    if (showLanguageDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showLanguageDropdown]);
+
+  const languages = [
+    'English',
+    'Spanish',
+    'French',
+    'German',
+    'Italian',
+    'Portuguese',
+    'Chinese',
+    'Japanese',
+    'Korean',
+    'Hindi'
+  ];
 
   const formatFileSize = (bytes: number): string => {
     if (bytes < 1024) return `${bytes} B`;
@@ -339,6 +373,24 @@ export default function WebpToPngPage() {
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: #94a3b8;
+        }
+        .language-dropdown-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: #cbd5e1 #f8f9fa;
+        }
+        .language-dropdown-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .language-dropdown-scrollbar::-webkit-scrollbar-track {
+          background: #f8f9fa;
+          border-radius: 3px;
+        }
+        .language-dropdown-scrollbar::-webkit-scrollbar-thumb {
+          background: #d1d5db;
+          border-radius: 3px;
+        }
+        .language-dropdown-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #9ca3af;
         }
       `}</style>
       <div className="min-h-screen bg-white">
@@ -657,7 +709,7 @@ export default function WebpToPngPage() {
         <div className="max-w-[1040px] mx-auto px-4 md:px-6">
           {/* Inner container to match "How to convert" section width */}
           <div className="max-w-[790px] mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-black text-center mb-12 md:mb-16">
+            <h2 className="text-2xl md:text-3xl font-bold text-black text-center mb-12 md:mb-16 opacity-75">
               Frequently Asked Questions (FAQs)
             </h2>
             
@@ -669,7 +721,7 @@ export default function WebpToPngPage() {
                 onClick={() => setOpenFaqIndex(openFaqIndex === 0 ? null : 0)}
                 className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
               >
-                <span className="font-bold text-gray-900 text-base md:text-lg">
+                <span className="font-bold text-gray-900 text-base md:text-lg opacity-75">
                   What is WebP image?
                 </span>
                 <svg
@@ -685,7 +737,7 @@ export default function WebpToPngPage() {
               </button>
               {openFaqIndex === 0 && (
                 <div className="px-4 pb-4 bg-white rounded-b-lg">
-                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed opacity-75">
                     WebP is a modern image format, developed by Google, designed to make the web faster. It uses smart compression techniques to create significantly smaller, richer images than older formats like JPG or PNG, which drastically improves website load times and saves bandwidth.
                     <br /><br />
                     This versatile format is ideal for modern graphics because it fully supports both transparency and animation.
@@ -700,7 +752,7 @@ export default function WebpToPngPage() {
                 onClick={() => setOpenFaqIndex(openFaqIndex === 1 ? null : 1)}
                 className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
               >
-                <span className="font-bold text-gray-900 text-base md:text-lg">
+                <span className="font-bold text-gray-900 text-base md:text-lg opacity-75">
                   What is PNG image?
                 </span>
                 <svg
@@ -716,7 +768,7 @@ export default function WebpToPngPage() {
               </button>
               {openFaqIndex === 1 && (
                 <div className="px-4 pb-4 bg-white rounded-b-lg">
-                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed opacity-75">
                     PNG (Portable Network Graphics) is one of the most popular and essential image formats on the internet. It's best known for its ability to handle lossless compression, which means the image quality remains perfect every time the file is saved or opened—you never lose any detail.
                     <br /><br />
                     Most importantly, PNG fully supports transparency (alpha channels). This feature is crucial for web design, allowing logos, icons, and graphics to have smooth, non-jagged edges and blend seamlessly over any background color or image.
@@ -731,7 +783,7 @@ export default function WebpToPngPage() {
                 onClick={() => setOpenFaqIndex(openFaqIndex === 2 ? null : 2)}
                 className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
               >
-                <span className="font-bold text-gray-900 text-base md:text-lg">
+                <span className="font-bold text-gray-900 text-base md:text-lg opacity-75">
                   When should you use the WebP format?
                 </span>
                 <svg
@@ -747,7 +799,7 @@ export default function WebpToPngPage() {
               </button>
               {openFaqIndex === 2 && (
                 <div className="px-4 pb-4 bg-white rounded-b-lg">
-                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed opacity-75">
                     You should use WebP whenever website performance and loading speed are your primary concern. Since WebP files are significantly smaller than traditional JPGs or PNGs, adopting this format is the best way to reduce page load times, which greatly improves the user experience and boosts your SEO.
                     <br /><br />
                     Moreover, WebP is the ideal choice when you need a single, versatile format that offers high-quality compression along with support for both transparency (like a PNG) and animation (like a GIF). Essentially, if the image is going on the web, using WebP is the smart modern choice.
@@ -762,7 +814,7 @@ export default function WebpToPngPage() {
                 onClick={() => setOpenFaqIndex(openFaqIndex === 3 ? null : 3)}
                 className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
               >
-                <span className="font-bold text-gray-900 text-base md:text-lg">
+                <span className="font-bold text-gray-900 text-base md:text-lg opacity-75">
                   When should you use the PNG format?
                 </span>
                 <svg
@@ -778,7 +830,7 @@ export default function WebpToPngPage() {
               </button>
               {openFaqIndex === 3 && (
                 <div className="px-4 pb-4 bg-white rounded-b-lg">
-                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed opacity-75">
                     You should use PNG when perfect quality and transparency are critical. It's the best choice for logos, icons, and sharp graphics because it uses lossless compression (meaning zero quality loss) and handles transparent backgrounds flawlessly—something a JPG can't do.
                   </p>
                 </div>
@@ -791,7 +843,7 @@ export default function WebpToPngPage() {
                 onClick={() => setOpenFaqIndex(openFaqIndex === 4 ? null : 4)}
                 className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
               >
-                <span className="font-bold text-gray-900 text-base md:text-lg">
+                <span className="font-bold text-gray-900 text-base md:text-lg opacity-75">
                   Is it free to convert WebP to PNG using Love U Convert?
                 </span>
                 <svg
@@ -807,7 +859,7 @@ export default function WebpToPngPage() {
               </button>
               {openFaqIndex === 4 && (
                 <div className="px-4 pb-4 bg-white rounded-b-lg">
-                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed opacity-75">
                     Yes, Love U Convert converts WebP to PNG for free.
                   </p>
                 </div>
@@ -820,7 +872,7 @@ export default function WebpToPngPage() {
                 onClick={() => setOpenFaqIndex(openFaqIndex === 5 ? null : 5)}
                 className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
               >
-                <span className="font-bold text-gray-900 text-base md:text-lg">
+                <span className="font-bold text-gray-900 text-base md:text-lg opacity-75">
                   Are all my files safe when converting WebP to PNG?
                 </span>
                 <svg
@@ -836,7 +888,7 @@ export default function WebpToPngPage() {
               </button>
               {openFaqIndex === 5 && (
                 <div className="px-4 pb-4 bg-white rounded-b-lg">
-                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed opacity-75">
                     Yes, Love U Convert's WebP to PNG converter secures all file transfers (uploads and downloads) with SSL/TLS encryption.
                   </p>
                 </div>
@@ -849,7 +901,7 @@ export default function WebpToPngPage() {
                 onClick={() => setOpenFaqIndex(openFaqIndex === 6 ? null : 6)}
                 className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
               >
-                <span className="font-bold text-gray-900 text-base md:text-lg">
+                <span className="font-bold text-gray-900 text-base md:text-lg opacity-75">
                   Do I need to install any software/app to convert WebP to PNG?
                 </span>
                 <svg
@@ -865,7 +917,7 @@ export default function WebpToPngPage() {
               </button>
               {openFaqIndex === 6 && (
                 <div className="px-4 pb-4 bg-white rounded-b-lg">
-                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed opacity-75">
                     No, you don't need to install any software/app to convert WebP to PNG. The conversion happens directly in your web browser.
                   </p>
                 </div>
@@ -878,7 +930,7 @@ export default function WebpToPngPage() {
                 onClick={() => setOpenFaqIndex(openFaqIndex === 7 ? null : 7)}
                 className="w-full flex items-center justify-between py-4 px-4 bg-white hover:bg-gray-50 transition-colors text-left rounded-lg"
               >
-                <span className="font-bold text-gray-900 text-base md:text-lg">
+                <span className="font-bold text-gray-900 text-base md:text-lg opacity-75">
                   Can I convert multiple WebP files to PNG at once?
                 </span>
                 <svg
@@ -894,7 +946,7 @@ export default function WebpToPngPage() {
               </button>
               {openFaqIndex === 7 && (
                 <div className="px-4 pb-4 bg-white rounded-b-lg">
-                  <p className="text-sm md:text-base text-gray-600 leading-relaxed">
+                  <p className="text-sm md:text-base text-gray-600 leading-relaxed opacity-75">
                     Absolutely! Our tool is built for maximum efficiency and handles batch conversions effortlessly.
                     <br /><br />
                     You can upload as many WebP files as you need simultaneously. Once the conversion is done:
@@ -912,6 +964,145 @@ export default function WebpToPngPage() {
           </div>
         </div>
       </section>
+
+      {/* Footer Section */}
+      <footer className="w-full bg-[#292931] text-white py-16 md:py-20 mt-20 md:mt-24">
+        <div className="max-w-[1040px] mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 mb-16">
+            {/* Quick Links Section */}
+            <div>
+              <h3 className="text-lg font-bold mb-6 text-white">Quick Links</h3>
+              <ul className="space-y-4">
+                <li>
+                  <a href="#" className="text-white/80 hover:text-white transition-colors text-sm block">
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-white/80 hover:text-white transition-colors text-sm block">
+                    Terms of Service
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-white/80 hover:text-white transition-colors text-sm block">
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-white/80 hover:text-white transition-colors text-sm block">
+                    Contact Us
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Support Section */}
+            <div>
+              <h3 className="text-lg font-bold mb-6 text-white">Support</h3>
+              <ul className="space-y-4">
+                <li>
+                  <a href="#" className="text-white/80 hover:text-white transition-colors text-sm block">
+                    Help Center
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-white/80 hover:text-white transition-colors text-sm block">
+                    FAQ
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-white/80 hover:text-white transition-colors text-sm block">
+                    Tutorial
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-white/80 hover:text-white transition-colors text-sm block">
+                    Feedback
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Language Section */}
+            <div>
+              <h3 className="text-lg font-bold mb-6 text-white">Language</h3>
+              <div className="relative inline-block" ref={languageDropdownRef}>
+                {/* Coming Soon Popup */}
+                {showComingSoon && (
+                  <div className="absolute bottom-full right-0 mb-2 px-4 py-2 bg-purple-500/60 text-white text-sm rounded-lg shadow-lg z-50 whitespace-nowrap animate-in fade-in duration-200">
+                    Coming soon
+                  </div>
+                )}
+                <button
+                  onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
+                  className="w-full md:w-[200px] px-5 py-2.5 bg-white hover:bg-white/90 rounded-lg text-black text-sm flex items-center justify-between gap-3 transition-colors"
+                >
+                  <span>{selectedLanguage}</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform duration-200 text-black ${
+                      showLanguageDropdown ? 'rotate-180' : ''
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {showLanguageDropdown && (
+                  <div className="absolute top-full right-0 mt-2 w-full md:w-[200px] bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
+                    <div className="max-h-[200px] overflow-y-auto language-dropdown-scrollbar">
+                      {languages.map((lang) => (
+                        <button
+                          key={lang}
+                          onClick={() => {
+                            if (lang !== 'English') {
+                              setShowComingSoon(true);
+                              setShowLanguageDropdown(false);
+                              setTimeout(() => {
+                                setShowComingSoon(false);
+                                setSelectedLanguage('English');
+                              }, 1000);
+                            } else {
+                              setSelectedLanguage(lang);
+                              setShowLanguageDropdown(false);
+                            }
+                          }}
+                          className={`w-full px-4 py-2.5 text-left text-sm transition-colors ${
+                            selectedLanguage === lang
+                              ? 'bg-purple-500/20 text-black font-medium'
+                              : 'text-black/80 hover:bg-gray-50 hover:text-black'
+                          }`}
+                        >
+                          {lang}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Section - Copyright and Social Links */}
+          <div className="border-t border-white/10 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-white/80 text-sm">
+              © 2024 Love U Convert. All rights reserved.
+            </p>
+            <div className="flex items-center gap-8">
+              <a href="#" className="text-white/80 hover:text-white transition-colors text-sm">
+                Facebook
+              </a>
+              <a href="#" className="text-white/80 hover:text-white transition-colors text-sm">
+                Twitter
+              </a>
+              <a href="#" className="text-white/80 hover:text-white transition-colors text-sm">
+                LinkedIn
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
       </div>
     </>
   );

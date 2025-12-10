@@ -101,10 +101,10 @@ export default function FileDropzone({
   return (
     <div className="relative w-full">
       <div
-        className={`w-full h-[310px] rounded-xl border-2 border-dashed bg-[#efeef3] shadow-[0_18px_45px_rgba(15,23,42,0.07)] shadow-xl px-5 md:px-10 py-8 md:py-12 flex flex-col items-center transition-all duration-200 ${
+        className={`w-full h-[310px] rounded-xl border-2 border-dashed bg-[#efeef3] shadow-[0_18px_45px_rgba(15,23,42,0.07)] px-5 md:px-10 py-8 md:py-12 flex flex-col items-center transition-all duration-200 ${
           isDragging
             ? 'border-purple-500 bg-purple-50/60 shadow-[0_22px_55px_rgba(88,28,135,0.35)]'
-            : 'border-slate-400 border-[3px]'
+            : 'border-purple-400 hover:shadow-[0_20px_50px_rgba(124,58,237,0.25)]'
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
