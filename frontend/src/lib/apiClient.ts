@@ -1,4 +1,24 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+// Get API base URL - handle mobile devices by using current hostname
+const getApiBaseUrl = (): string => {
+  // Use environment variable if set
+  if (process.env.NEXT_PUBLIC_API_BASE_URL) {
+    return process.env.NEXT_PUBLIC_API_BASE_URL;
+  }
+  
+  // For client-side (browser), detect if we're on mobile/network
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    // If not localhost, use the same hostname (works for mobile accessing dev machine)
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+      return `http://${hostname}:3000`;
+    }
+  }
+  
+  // Default to localhost for desktop development
+  return 'http://localhost:3000';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export type ConvertResponse =
   | { status: 'success'; mode: 'single'; downloadUrl: string; meta?: { outputFormat?: string; originalName?: string; [key: string]: any } }
@@ -19,10 +39,19 @@ export async function uploadAndConvert(
   // Append target format
   form.append('targetFormat', targetFormat);
 
-  const response = await fetch(`${API_BASE_URL}/api/convert`, {
-    method: 'POST',
-    body: form,
-  });
+  let response;
+  try {
+    response = await fetch(`${API_BASE_URL}/api/convert`, {
+      method: 'POST',
+      body: form,
+    });
+  } catch (fetchError: any) {
+    // Handle network errors (server not running, CORS, etc.)
+    if (fetchError.message?.includes('fetch') || fetchError.message?.includes('Failed to fetch') || fetchError.name === 'TypeError') {
+      throw new Error('Network error: Could not connect to the server. Please make sure the backend server is running on http://localhost:3000');
+    }
+    throw fetchError;
+  }
 
   // Check if response is HTML (404 page or error page)
   const contentType = response.headers.get('content-type') || '';

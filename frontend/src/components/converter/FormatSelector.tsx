@@ -15,7 +15,6 @@ const formats = [
   { value: 'ico', label: 'ICO' },
   { value: 'jpeg', label: 'JPEG' },
   { value: 'jpg', label: 'JPG' },
-  { value: 'odd', label: 'ODD' },
   { value: 'svg', label: 'SVG' },
   { value: 'psd', label: 'PSD' },
   { value: 'tga', label: 'TGA' },

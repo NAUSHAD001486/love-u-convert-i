@@ -29,7 +29,10 @@ export default function WebpToPngPage() {
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [showComingSoon, setShowComingSoon] = useState(false);
+  const [showFileSizeNotification, setShowFileSizeNotification] = useState(false);
   const languageDropdownRef = useRef<HTMLDivElement>(null);
+  const convertButtonRef = useRef<HTMLDivElement>(null);
+  const hasScrolledRef = useRef(false);
 
   // Create thumbnails for image files
   useEffect(() => {
@@ -64,6 +67,49 @@ export default function WebpToPngPage() {
     };
   }, [showLanguageDropdown]);
 
+  // Auto-scroll to convert button when files are first selected
+  useEffect(() => {
+    if (selectedFiles.length > 0 && !hasScrolledRef.current && convertButtonRef.current) {
+      hasScrolledRef.current = true;
+      setTimeout(() => {
+        const element = convertButtonRef.current;
+        if (element) {
+          const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+          const offsetPosition = elementPosition - 40; // Scroll thoda kam upar (40px offset - minimal scroll)
+          
+          // Slow smooth scroll
+          const startPosition = window.pageYOffset;
+          const distance = (offsetPosition - startPosition) * 0.3; // Reduce scroll distance by 70% (minimal scroll)
+          const duration = 800; // Duration in milliseconds
+          let startTime: number | null = null;
+
+          const animateScroll = (currentTime: number) => {
+            if (startTime === null) startTime = currentTime;
+            const timeElapsed = currentTime - startTime;
+            const progress = Math.min(timeElapsed / duration, 1);
+            
+            // Easing function for smooth scroll
+            const ease = progress < 0.5 
+              ? 2 * progress * progress 
+              : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+            
+            window.scrollTo(0, startPosition + distance * ease);
+            
+            if (progress < 1) {
+              requestAnimationFrame(animateScroll);
+            }
+          };
+          
+          requestAnimationFrame(animateScroll);
+        }
+      }, 100);
+    }
+    // Reset scroll flag when files are cleared
+    if (selectedFiles.length === 0) {
+      hasScrolledRef.current = false;
+    }
+  }, [selectedFiles.length]);
+
   const languages = [
     'English',
     'Spanish',
@@ -84,7 +130,21 @@ export default function WebpToPngPage() {
   };
 
   const handleFilesSelected = (files: File[]) => {
-    setSelectedFiles(Array.from(files));
+    // Add new files to existing files instead of replacing
+    setSelectedFiles((prevFiles) => {
+      const newFiles = Array.from(files);
+      // Combine existing files with new files, avoiding duplicates by name and size
+      const combinedFiles = [...prevFiles];
+      newFiles.forEach((newFile) => {
+        const isDuplicate = combinedFiles.some(
+          (existingFile) => existingFile.name === newFile.name && existingFile.size === newFile.size
+        );
+        if (!isDuplicate) {
+          combinedFiles.push(newFile);
+        }
+      });
+      return combinedFiles;
+    });
     setResult(null);
     setError(null);
   };
@@ -219,6 +279,13 @@ export default function WebpToPngPage() {
         setProgressStage('');
         if (err.message?.includes('fetch') || err.message?.includes('Network')) {
           setError('Network error: Could not connect to the server.');
+        } else if (err.message?.includes('File size too large') || err.message?.includes('10485760') || err.message?.includes('Maximum is') || err.message?.includes('too large')) {
+          // Show professional notification for file size error
+          setShowFileSizeNotification(true);
+          setTimeout(() => {
+            setShowFileSizeNotification(false);
+          }, 1000);
+          setError('File size exceeds the limit. Please use a smaller file or upgrade your plan for higher limits.');
         } else {
           setError(err.message || 'Conversion failed. Please try again.');
         }
@@ -328,6 +395,13 @@ export default function WebpToPngPage() {
         setProgressStage('');
         if (err.message?.includes('fetch') || err.message?.includes('Network')) {
           setError('Network error: Could not connect to the server.');
+        } else if (err.message?.includes('File size too large') || err.message?.includes('10485760') || err.message?.includes('Maximum is') || err.message?.includes('too large')) {
+          // Show professional notification for file size error
+          setShowFileSizeNotification(true);
+          setTimeout(() => {
+            setShowFileSizeNotification(false);
+          }, 1000);
+          setError('File size exceeds the limit. Please use a smaller file or upgrade your plan for higher limits.');
         } else {
           setError(err.message || 'Conversion failed. Please try again.');
         }
@@ -395,6 +469,22 @@ export default function WebpToPngPage() {
       `}</style>
       <div className="min-h-screen bg-white">
         <Header />
+        
+        {/* File Size Notification - Below Header */}
+        {showFileSizeNotification && (
+          <div className="fixed top-[60px] left-0 right-0 z-50 flex justify-center animate-in fade-in slide-in-from-top duration-300">
+            <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-6 py-3 rounded-lg shadow-lg mx-4 max-w-md">
+              <div className="flex items-center gap-3">
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-sm font-medium">
+                  File size exceeds the limit. Please use a smaller file or upgrade your plan for higher limits.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       
       <main className="pt-[50px] pb-16">
         {/* Hero Title + Subtitle - Center, no background */}
@@ -525,7 +615,7 @@ export default function WebpToPngPage() {
 
             {/* Convert Section - Only show if files are selected, below dropzone */}
             {selectedFiles.length > 0 && (
-              <div className="mt-[15px] space-y-4">
+              <div ref={convertButtonRef} className="mt-[15px] space-y-4">
                 {/* Settings Bar (Output Format) - Right aligned above button */}
                 <div className="flex justify-end items-center gap-2">
                   <label className="text-sm font-medium text-gray-700">Output:</label>
@@ -968,7 +1058,7 @@ export default function WebpToPngPage() {
       {/* Footer Section */}
       <footer className="w-full bg-[#292931] text-white py-16 md:py-20 mt-20 md:mt-24">
         <div className="max-w-[1040px] mx-auto px-4 md:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 mb-16">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-16 mb-16">
             {/* Quick Links Section */}
             <div>
               <h3 className="text-lg font-bold mb-6 text-white">Quick Links</h3>
