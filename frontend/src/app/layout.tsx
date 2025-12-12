@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import '../styles/globals.css';
 import Header from '@/components/layout/Header';
@@ -6,8 +6,18 @@ import Header from '@/components/layout/Header';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Love U Convert - Fast Online Image Converter',
-  description: 'Convert WebP to PNG and more, free and fast.',
+  title: {
+    default: 'Love U Convert – Online Image Converter',
+    template: '%s | Love U Convert',
+  },
+  description: 'Free online image converter. Convert WebP to PNG, PNG to JPG, and more image formats quickly and securely. No installation required.',
+  icons: {
+    icon: '/favicon.ico',
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#ffffff',
 };
 
 export default function RootLayout({

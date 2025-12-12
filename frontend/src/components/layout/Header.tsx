@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
@@ -34,10 +35,13 @@ export default function Header() {
         isVisible ? 'translate-y-0' : '-translate-y-full opacity-0'
       }`}
     >
-      <div className="h-full max-w-7xl mx-auto px-4 flex items-center">
+      <div className="h-full max-w-7xl mx-auto px-4 flex items-center justify-between">
         <div className="text-[#7C3AED] font-semibold text-lg">
           Love U convert
         </div>
+        <Link href="/" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+          All tools
+        </Link>
       </div>
     </header>
   );

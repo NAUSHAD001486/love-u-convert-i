@@ -5,9 +5,10 @@ import { useState, useRef, useEffect } from 'react';
 interface FormatSelectorProps {
   value: string;
   onChange: (value: string) => void;
+  allowedFormats?: string[]; // Optional: filter formats by allowed list
 }
 
-const formats = [
+const allFormats = [
   { value: 'png', label: 'PNG' },
   { value: 'bmp', label: 'BMP' },
   { value: 'eps', label: 'EPS' },
@@ -22,9 +23,14 @@ const formats = [
   { value: 'webp', label: 'WebP' },
 ];
 
-export default function FormatSelector({ value, onChange }: FormatSelectorProps) {
+export default function FormatSelector({ value, onChange, allowedFormats }: FormatSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Filter formats if allowedFormats is provided
+  const formats = allowedFormats
+    ? allFormats.filter((f) => allowedFormats.includes(f.value))
+    : allFormats;
 
   const selectedFormat = formats.find((f) => f.value === value) || formats[0];
 

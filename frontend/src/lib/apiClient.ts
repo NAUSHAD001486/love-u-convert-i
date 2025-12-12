@@ -1,24 +1,26 @@
-// Get API base URL - handle mobile devices by using current hostname
-const getApiBaseUrl = (): string => {
-  // Use environment variable if set
+// Get API base URL - device-dependent helper
+export const getApiBaseUrl = (): string => {
+  // Priority 1: Use environment variable if set
   if (process.env.NEXT_PUBLIC_API_BASE_URL) {
     return process.env.NEXT_PUBLIC_API_BASE_URL;
   }
   
-  // For client-side (browser), detect if we're on mobile/network
+  // For client-side (browser), detect hostname and protocol
   if (typeof window !== 'undefined') {
-    const hostname = window.location.hostname;
-    // If not localhost, use the same hostname (works for mobile accessing dev machine)
-    if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
-      return `http://${hostname}:3000`;
+    const { protocol, hostname } = window.location;
+    
+    // If localhost, use http://localhost:3000
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://localhost:3000';
     }
+    
+    // Otherwise, use same hostname with port 3000 (for LAN/mobile access)
+    return `${protocol}//${hostname}:3000`;
   }
   
-  // Default to localhost for desktop development
+  // Default to localhost for server-side rendering
   return 'http://localhost:3000';
 };
-
-const API_BASE_URL = getApiBaseUrl();
 
 export type ConvertResponse =
   | { status: 'success'; mode: 'single'; downloadUrl: string; meta?: { outputFormat?: string; originalName?: string; [key: string]: any } }
@@ -38,6 +40,9 @@ export async function uploadAndConvert(
 
   // Append target format
   form.append('targetFormat', targetFormat);
+
+  // Get API base URL dynamically
+  const API_BASE_URL = getApiBaseUrl();
 
   let response;
   try {

@@ -1,9 +1,3 @@
-backend/node_modules
-node_modules
-.env
-*.log
-.DS_Store
-backend/dist
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
