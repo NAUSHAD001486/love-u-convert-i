@@ -13,6 +13,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(requestId);
 app.use(cors);
 
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'Backend running' });
+});
+
 app.use('/api/health', healthRoutes);
 app.use('/api/convert', convertRoutes);
 

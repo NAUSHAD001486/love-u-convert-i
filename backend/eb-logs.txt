@@ -1,0 +1,4 @@
+Retrieving logs...
+Logs were saved to /Users/nausadalam/Desktop/love-u-convert/backend/.elasticbeanstalk/logs/251213_005753
+Logs were saved to /Users/nausadalam/Desktop/love-u-convert/backend/.elasticbeanstalk/logs/251213_005753
+Updated symlink at /Users/nausadalam/Desktop/love-u-convert/backend/.elasticbeanstalk/logs/latest

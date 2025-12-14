@@ -1,14 +1,11 @@
 import dotenv from 'dotenv';
 import app from './app';
-import { loadEnv } from './config/env';
 
 dotenv.config();
-loadEnv();
 
-const PORT: number = parseInt(process.env.PORT ?? '3000', 10);
-const HOST = process.env.HOST || '0.0.0.0'; // Listen on all network interfaces for mobile access
+const PORT = (process.env.PORT || 3000) as number;
 
-app.listen(PORT, HOST, () => {
-  console.log(`Server running on http://${HOST}:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
