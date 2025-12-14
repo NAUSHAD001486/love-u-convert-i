@@ -1,0 +1,134 @@
+2025/11/10 16:50:06.935517 [INFO] Running command: .platform/hooks/postdeploy/01_restart_server.sh
+2025/11/10 16:50:08.110357 [INFO] 
+                        -------------
+
+__/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
+ _\/\\\/////////\\\_\/\\\\\\________/\\\\\\__/\\\///////\\\___
+  _\/\\\_______\/\\\_\/\\\//\\\____/\\\//\\\_\///______\//\\\__
+   _\/\\\\\\\\\\\\\/__\/\\\\///\\\/\\\/_\/\\\___________/\\\/___
+    _\/\\\/////////____\/\\\__\///\\\/___\/\\\________/\\\//_____
+     _\/\\\_____________\/\\\____\///_____\/\\\_____/\\\//________
+      _\/\\\_____________\/\\\_____________\/\\\___/\\\/___________
+       _\/\\\_____________\/\\\_____________\/\\\__/\\\\\\\\\\\\\\\_
+        _\///______________\///______________\///__\///////////////__
+
+
+                          Runtime Edition
+
+        PM2 is a Production Process Manager for Node.js applications
+                     with a built-in Load Balancer.
+
+                Start and Daemonize any application:
+                $ pm2 start app.js
+
+                Load Balance 4 instances of api.js:
+                $ pm2 start api.js -i 4
+
+                Monitor in production:
+                $ pm2 monitor
+
+                Make pm2 auto-boot at server restart:
+                $ pm2 startup
+
+                To go further checkout:
+                http://pm2.io/
+
+
+                        -------------
+
+[PM2] Spawning PM2 daemon with pm2_home=/root/.pm2
+[PM2] PM2 Successfully daemonized
+[PM2][WARN] Applications love-u-convert-api not running, starting...
+[PM2] App [love-u-convert-api] launched (1 instances)
+┌────┬───────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                  │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼───────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ love-u-convert-api    │ default     │ 1.0.0   │ fork    │ 25335    │ 0s     │ 0    │ online    │ 0%       │ 15.5mb   │ root     │ disabled │
+└────┴───────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+2025/11/11 06:18:16.925602 [INFO] Running command: .platform/hooks/postdeploy/01_restart_server.sh
+2025/11/11 06:18:17.968470 [INFO] [PM2] Applying action restartProcessId on app [love-u-convert-api](ids: [ 0 ])
+[PM2] Applying action restartProcessId on app [love-u-convert-api](ids: [ 0 ])
+[PM2] [love-u-convert-api](0) ✓
+┌────┬───────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                  │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼───────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ love-u-convert-api    │ default     │ 1.0.0   │ fork    │ 60928    │ 0s     │ 9    │ online    │ 0%       │ 6.5mb    │ root     │ disabled │
+└────┴───────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+2025/11/11 06:18:17.968504 [INFO] [PM2][ERROR] Process 0 not found
+Process 0 not found
+/usr/lib/node_modules/pm2/lib/API.js:1719
+        acted.push(proc.pm2_env ? proc.pm2_env.pm_id : proc.pm_id)
+                        ^
+
+TypeError: Cannot read properties of undefined (reading 'pm2_env')
+    at /usr/lib/node_modules/pm2/lib/API.js:1719:25
+    at Array.forEach (<anonymous>)
+    at API.speedList (/usr/lib/node_modules/pm2/lib/API.js:1718:18)
+    at /usr/lib/node_modules/pm2/lib/binaries/CLI.js:385:11
+    at wrapper (/usr/lib/node_modules/pm2/node_modules/async/internal/once.js:12:16)
+    at replenish (/usr/lib/node_modules/pm2/node_modules/async/internal/eachOfLimit.js:76:25)
+    at iterateeCallback (/usr/lib/node_modules/pm2/node_modules/async/internal/eachOfLimit.js:65:17)
+    at /usr/lib/node_modules/pm2/node_modules/async/internal/onlyOnce.js:12:16
+    at /usr/lib/node_modules/pm2/lib/binaries/CLI.js:382:9
+    at /usr/lib/node_modules/pm2/lib/API.js:1096:23
+
+Node.js v22.21.1
+
+2025/11/11 09:24:05.838476 [INFO] Running command: .platform/hooks/postdeploy/01_restart_server.sh
+2025/11/11 09:24:06.879922 [INFO] [PM2] Applying action restartProcessId on app [love-u-convert-api](ids: [ 0 ])
+[PM2] Applying action restartProcessId on app [love-u-convert-api](ids: [ 0 ])
+[PM2] [love-u-convert-api](0) ✓
+┌────┬───────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                  │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼───────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ love-u-convert-api    │ default     │ 1.0.0   │ fork    │ 69629    │ 0s     │ 18   │ online    │ 0%       │ 1.2mb    │ root     │ disabled │
+└────┴───────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+2025/11/11 09:24:06.879972 [INFO] [PM2][ERROR] Process 0 not found
+Process 0 not found
+/usr/lib/node_modules/pm2/lib/API.js:1719
+        acted.push(proc.pm2_env ? proc.pm2_env.pm_id : proc.pm_id)
+                        ^
+
+TypeError: Cannot read properties of undefined (reading 'pm2_env')
+    at /usr/lib/node_modules/pm2/lib/API.js:1719:25
+    at Array.forEach (<anonymous>)
+    at API.speedList (/usr/lib/node_modules/pm2/lib/API.js:1718:18)
+    at /usr/lib/node_modules/pm2/lib/binaries/CLI.js:385:11
+    at wrapper (/usr/lib/node_modules/pm2/node_modules/async/internal/once.js:12:16)
+    at replenish (/usr/lib/node_modules/pm2/node_modules/async/internal/eachOfLimit.js:76:25)
+    at iterateeCallback (/usr/lib/node_modules/pm2/node_modules/async/internal/eachOfLimit.js:65:17)
+    at /usr/lib/node_modules/pm2/node_modules/async/internal/onlyOnce.js:12:16
+    at /usr/lib/node_modules/pm2/lib/binaries/CLI.js:382:9
+    at /usr/lib/node_modules/pm2/lib/API.js:1096:23
+
+Node.js v22.21.1
+
+2025/11/11 10:02:09.155850 [INFO] Running command: .platform/hooks/postdeploy/01_restart_server.sh
+2025/11/11 10:02:09.820987 [INFO] [PM2] Applying action restartProcessId on app [love-u-convert-api](ids: [ 0 ])
+[PM2] [love-u-convert-api](0) ✓
+┌────┬───────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                  │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼───────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ love-u-convert-api    │ default     │ 1.0.0   │ fork    │ 72009    │ 0s     │ 27   │ online    │ 0%       │ 4.9mb    │ root     │ disabled │
+└────┴───────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+2025/11/11 10:09:02.936217 [INFO] Running command: .platform/hooks/postdeploy/01_restart_server.sh
+2025/11/11 10:09:03.622089 [INFO] [PM2] Applying action restartProcessId on app [love-u-convert-api](ids: [ 0 ])
+[PM2] [love-u-convert-api](0) ✓
+┌────┬───────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                  │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼───────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ love-u-convert-api    │ default     │ 1.0.0   │ fork    │ 73003    │ 0s     │ 36   │ online    │ 0%       │ 13.9mb   │ root     │ disabled │
+└────┴───────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+2025/11/11 10:34:26.464261 [INFO] Running command: .platform/hooks/postdeploy/01_restart_server.sh
+2025/11/11 10:43:49.450681 [INFO] Running command: .platform/hooks/postdeploy/01_restart_server.sh
+2025/11/12 15:19:47.078825 [INFO] Running command: .platform/hooks/postdeploy/01_restart_server.sh
+2025/11/12 15:39:19.419777 [INFO] Running command: .platform/hooks/postdeploy/01_restart_server.sh
+2025/11/12 17:32:17.552111 [INFO] Running command: .platform/hooks/postdeploy/01_restart_server.sh
+2025/11/12 17:47:50.640021 [INFO] Running command: .platform/hooks/postdeploy/01_restart_server.sh
+2025/11/12 18:02:17.450278 [INFO] Running command: .platform/hooks/postdeploy/01_restart_server.sh
+2025/11/12 18:17:00.491029 [INFO] Running command: .platform/hooks/postdeploy/01_restart_server.sh

@@ -1,0 +1,16 @@
+2025-12-12 21:53:52,216 [DEBUG] CloudFormation client initialized with endpoint https://cloudformation.us-east-1.amazonaws.com
+2025-12-12 21:53:52,217 [DEBUG] SQS client initialized with endpoint https://sqs.us-east-1.amazonaws.com
+2025-12-12 21:53:52,217 [DEBUG] CloudFormation client initialized with endpoint https://cloudformation.us-east-1.amazonaws.com
+2025-12-12 21:53:52,217 [DEBUG] Enabled single threading mode.
+2025-12-12 21:53:52,217 [DEBUG] Creating /var/lib/cfn-hup/data
+2025-12-12 21:53:52,226 [INFO] No umask value specified in config file. Using the default one: 0o22
+2025-12-12 21:53:52,288 [INFO] Pid: 1794
+2025-12-12 21:53:53,827 [INFO] Refreshing listener credentials
+2025-12-12 21:53:53,911 [INFO] Scheduling next credential refresh in 1799.0 seconds
+2025-12-12 21:56:42,445 [INFO] Received command ElasticBeanstalkCommand-AWSEBAutoScalingGroup (invocation id: e1b1bb30-0d69-49d8-bf1d-9646347cfc72)
+2025-12-12 21:56:42,445 [INFO] Running action for aws-eb-command-handler
+2025-12-12 21:56:46,586 [INFO] Action for aws-eb-command-handler succeeded, returning SUCCESS
+2025-12-12 21:59:06,899 [INFO] command processing is alive.
+2025-12-12 22:04:07,471 [INFO] command processing is alive.
+2025-12-12 22:08:15,379 [INFO] Received command ElasticBeanstalkCommand-AWSEBAutoScalingGroup (invocation id: 3360e029-4b18-4b1d-a08c-6344ad0ee5df)
+2025-12-12 22:08:15,379 [INFO] Running action for aws-eb-command-handler

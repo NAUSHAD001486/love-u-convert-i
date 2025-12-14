@@ -1,0 +1,54 @@
+2025/11/10 11:12:53 [emerg] 2282#2282: "client_max_body_size" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 11:27:00 [emerg] 3909#3909: "client_max_body_size" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 11:31:25 [emerg] 5058#5058: "client_max_body_size" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 11:34:27 [emerg] 5868#5868: "client_max_body_size" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 11:35:20 [emerg] 6375#6375: "client_max_body_size" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 11:36:27 [emerg] 6914#6914: "client_max_body_size" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 11:39:13 [emerg] 7493#7493: "client_max_body_size" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 11:40:21 [emerg] 8014#8014: "client_max_body_size" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 16:15:42 [emerg] 20353#20353: "client_max_body_size" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 16:18:44 [emerg] 20964#20964: "client_max_body_size" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 16:20:52 [emerg] 21732#21732: "client_max_body_size" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 16:38:04 [emerg] 22923#22923: "location" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 16:39:17 [emerg] 23422#23422: "location" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 16:40:24 [emerg] 23943#23943: "location" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 16:41:40 [emerg] 24446#24446: "location" directive is not allowed here in /var/proxy/staging/nginx/nginx.conf:1
+2025/11/10 16:50:06 [warn] 25251#25251: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/10 16:50:06 [warn] 25290#25290: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/10 16:50:06 [warn] 25292#25292: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 06:18:16 [warn] 60852#60852: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 06:18:16 [warn] 60891#60891: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 06:18:16 [warn] 60892#60892: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 09:24:05 [warn] 69553#69553: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 09:24:05 [warn] 69592#69592: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 09:24:05 [warn] 69594#69594: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 10:02:08 [warn] 71941#71941: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 10:02:09 [warn] 71980#71980: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 10:02:09 [warn] 71981#71981: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 10:09:01 [warn] 72935#72935: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 10:09:02 [warn] 72974#72974: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 10:09:02 [warn] 72975#72975: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 10:34:25 [warn] 74786#74786: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 10:34:26 [warn] 74825#74825: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 10:34:26 [warn] 74827#74827: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 10:43:48 [warn] 75794#75794: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 10:43:49 [warn] 75833#75833: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/11 10:43:49 [warn] 75834#75834: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 15:19:46 [warn] 153652#153652: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 15:19:46 [warn] 153691#153691: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 15:19:46 [warn] 153692#153692: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 15:39:18 [warn] 155146#155146: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 15:39:19 [warn] 155185#155185: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 15:39:19 [warn] 155186#155186: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 17:32:16 [warn] 160832#160832: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 17:32:17 [warn] 160871#160871: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 17:32:17 [warn] 160873#160873: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 17:47:49 [warn] 162105#162105: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 17:47:50 [warn] 162144#162144: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 17:47:50 [warn] 162145#162145: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 18:02:16 [warn] 163411#163411: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 18:02:17 [warn] 163450#163450: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 18:02:17 [warn] 163451#163451: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 18:16:59 [warn] 164632#164632: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 18:17:00 [warn] 164671#164671: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
+2025/11/12 18:17:00 [warn] 164672#164672: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size

@@ -1,0 +1,355 @@
+2025-11-10 11:10:00,602 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:10:00,625 [INFO] Running configSets: _OnInstanceBoot
+2025-11-10 11:10:00,630 [INFO] Running configSet _OnInstanceBoot
+2025-11-10 11:10:00,633 [INFO] Running config AWSEBBaseConfig
+2025-11-10 11:10:01,122 [INFO] Command clearbackupfiles succeeded
+2025-11-10 11:10:01,133 [INFO] Running config AWSEBCfnHupEndpointOverride
+2025-11-10 11:10:01,149 [INFO] Command clearbackupfiles succeeded
+2025-11-10 11:10:01,151 [INFO] ConfigSets completed
+2025-11-10 11:10:01,151 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:12:31,019 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:12:31,024 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-10 11:12:31,026 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-10 11:12:31,029 [INFO] Running config prebuild_0_love_u_convert
+2025-11-10 11:12:39,934 [INFO] Command 01_install_pm2 succeeded
+2025-11-10 11:12:39,938 [INFO] Running config prebuild_1_love_u_convert
+2025-11-10 11:12:39,943 [ERROR] Command 01_make_cleanup_executable (chmod +x /var/app/current/scripts/cleanup.sh) failed
+2025-11-10 11:12:39,943 [INFO] ignoreErrors set to true, continuing build
+2025-11-10 11:12:39,944 [INFO] ConfigSets completed
+2025-11-10 11:12:39,944 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:12:52,053 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:12:52,060 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 11:12:52,063 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 11:12:52,063 [INFO] ConfigSets completed
+2025-11-10 11:12:52,063 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:26:58,714 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:26:58,719 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 11:26:58,720 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 11:26:58,721 [INFO] ConfigSets completed
+2025-11-10 11:26:58,721 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:31:23,780 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:31:23,785 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 11:31:23,788 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 11:31:23,788 [INFO] ConfigSets completed
+2025-11-10 11:31:23,788 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:34:08,140 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:34:08,145 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-10 11:34:08,148 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-10 11:34:08,150 [INFO] Running config prebuild_0_love_u_convert
+2025-11-10 11:34:15,092 [INFO] Command 01_install_pm2 succeeded
+2025-11-10 11:34:15,095 [INFO] Running config prebuild_1_love_u_convert
+2025-11-10 11:34:15,101 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-10 11:34:15,102 [INFO] ConfigSets completed
+2025-11-10 11:34:15,102 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:34:25,416 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:34:25,422 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 11:34:25,425 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 11:34:25,425 [INFO] ConfigSets completed
+2025-11-10 11:34:25,426 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:35:04,554 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:35:04,560 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-10 11:35:04,564 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-10 11:35:04,567 [INFO] Running config prebuild_0_love_u_convert
+2025-11-10 11:35:08,482 [INFO] Command 01_install_pm2 succeeded
+2025-11-10 11:35:08,485 [INFO] Running config prebuild_1_love_u_convert
+2025-11-10 11:35:08,499 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-10 11:35:08,500 [INFO] ConfigSets completed
+2025-11-10 11:35:08,500 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:35:18,842 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:35:18,849 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 11:35:18,852 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 11:35:18,852 [INFO] ConfigSets completed
+2025-11-10 11:35:18,852 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:36:14,575 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:36:14,580 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-10 11:36:14,583 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-10 11:36:14,585 [INFO] Running config prebuild_0_love_u_convert
+2025-11-10 11:36:14,591 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-10 11:36:14,592 [INFO] ConfigSets completed
+2025-11-10 11:36:14,593 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:36:25,497 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:36:25,502 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 11:36:25,504 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 11:36:25,504 [INFO] ConfigSets completed
+2025-11-10 11:36:25,504 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:38:59,515 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:38:59,520 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-10 11:38:59,522 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-10 11:38:59,524 [INFO] Running config prebuild_0_love_u_convert
+2025-11-10 11:38:59,530 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-10 11:38:59,531 [INFO] ConfigSets completed
+2025-11-10 11:38:59,531 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:39:11,437 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:39:11,444 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 11:39:11,447 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 11:39:11,448 [INFO] ConfigSets completed
+2025-11-10 11:39:11,448 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:40:08,844 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:40:08,852 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-10 11:40:08,855 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-10 11:40:08,855 [INFO] ConfigSets completed
+2025-11-10 11:40:08,855 [INFO] -----------------------Build complete-----------------------
+2025-11-10 11:40:19,031 [INFO] -----------------------Starting build-----------------------
+2025-11-10 11:40:19,036 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 11:40:19,039 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 11:40:19,039 [INFO] ConfigSets completed
+2025-11-10 11:40:19,039 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:15:40,826 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:15:40,832 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 16:15:40,835 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 16:15:40,835 [INFO] ConfigSets completed
+2025-11-10 16:15:40,835 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:18:22,709 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:18:22,715 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-10 16:18:22,717 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-10 16:18:22,720 [INFO] Running config prebuild_0_love_u_convert
+2025-11-10 16:18:31,676 [INFO] Command 01_install_pm2 succeeded
+2025-11-10 16:18:31,679 [INFO] Running config prebuild_1_love_u_convert
+2025-11-10 16:18:31,684 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-10 16:18:31,685 [INFO] ConfigSets completed
+2025-11-10 16:18:31,685 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:18:42,018 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:18:42,027 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 16:18:42,030 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 16:18:42,031 [INFO] ConfigSets completed
+2025-11-10 16:18:42,031 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:20:40,209 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:20:40,215 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-10 16:20:40,217 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-10 16:20:40,220 [INFO] Running config prebuild_0_love_u_convert
+2025-11-10 16:20:40,226 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-10 16:20:40,227 [INFO] ConfigSets completed
+2025-11-10 16:20:40,227 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:20:50,522 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:20:50,527 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 16:20:50,530 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 16:20:50,530 [INFO] ConfigSets completed
+2025-11-10 16:20:50,530 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:37:50,985 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:37:50,991 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-10 16:37:50,993 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-10 16:37:50,995 [INFO] Running config prebuild_0_love_u_convert
+2025-11-10 16:37:51,001 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-10 16:37:51,002 [INFO] ConfigSets completed
+2025-11-10 16:37:51,002 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:38:02,336 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:38:02,363 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 16:38:02,372 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 16:38:02,374 [INFO] ConfigSets completed
+2025-11-10 16:38:02,374 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:39:04,703 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:39:04,708 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-10 16:39:04,710 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-10 16:39:04,713 [INFO] Running config prebuild_0_love_u_convert
+2025-11-10 16:39:04,724 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-10 16:39:04,726 [INFO] ConfigSets completed
+2025-11-10 16:39:04,726 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:39:15,120 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:39:15,125 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 16:39:15,128 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 16:39:15,128 [INFO] ConfigSets completed
+2025-11-10 16:39:15,128 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:40:11,360 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:40:11,366 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-10 16:40:11,368 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-10 16:40:11,373 [INFO] Running config prebuild_0_love_u_convert
+2025-11-10 16:40:11,380 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-10 16:40:11,381 [INFO] ConfigSets completed
+2025-11-10 16:40:11,381 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:40:22,188 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:40:22,193 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 16:40:22,196 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 16:40:22,196 [INFO] ConfigSets completed
+2025-11-10 16:40:22,196 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:41:28,050 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:41:28,055 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-10 16:41:28,058 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-10 16:41:28,060 [INFO] Running config prebuild_0_love_u_convert
+2025-11-10 16:41:28,066 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-10 16:41:28,067 [INFO] ConfigSets completed
+2025-11-10 16:41:28,067 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:41:38,569 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:41:38,574 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 16:41:38,576 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 16:41:38,576 [INFO] ConfigSets completed
+2025-11-10 16:41:38,576 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:49:51,436 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:49:51,441 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-10 16:49:51,444 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-10 16:49:51,446 [INFO] Running config prebuild_0_love_u_convert
+2025-11-10 16:49:51,452 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-10 16:49:51,455 [INFO] Running config prebuild_1_love_u_convert
+2025-11-10 16:49:51,457 [INFO] ConfigSets completed
+2025-11-10 16:49:51,457 [INFO] -----------------------Build complete-----------------------
+2025-11-10 16:50:03,720 [INFO] -----------------------Starting build-----------------------
+2025-11-10 16:50:03,737 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-10 16:50:03,745 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-10 16:50:03,745 [INFO] ConfigSets completed
+2025-11-10 16:50:03,745 [INFO] -----------------------Build complete-----------------------
+2025-11-11 06:18:01,061 [INFO] -----------------------Starting build-----------------------
+2025-11-11 06:18:01,067 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-11 06:18:01,070 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-11 06:18:01,073 [INFO] Running config prebuild_0_love_u_convert
+2025-11-11 06:18:01,080 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-11 06:18:01,084 [INFO] Running config prebuild_1_love_u_convert
+2025-11-11 06:18:01,087 [INFO] ConfigSets completed
+2025-11-11 06:18:01,087 [INFO] -----------------------Build complete-----------------------
+2025-11-11 06:18:13,444 [INFO] -----------------------Starting build-----------------------
+2025-11-11 06:18:13,449 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-11 06:18:13,452 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-11 06:18:13,452 [INFO] ConfigSets completed
+2025-11-11 06:18:13,452 [INFO] -----------------------Build complete-----------------------
+2025-11-11 09:23:49,757 [INFO] -----------------------Starting build-----------------------
+2025-11-11 09:23:49,762 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-11 09:23:49,765 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-11 09:23:49,767 [INFO] Running config prebuild_0_love_u_convert
+2025-11-11 09:23:49,773 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-11 09:23:49,776 [INFO] Running config prebuild_1_love_u_convert
+2025-11-11 09:23:49,779 [INFO] Running config prebuild_2_love_u_convert
+2025-11-11 09:23:49,780 [INFO] ConfigSets completed
+2025-11-11 09:23:49,781 [INFO] -----------------------Build complete-----------------------
+2025-11-11 09:23:59,904 [INFO] -----------------------Starting build-----------------------
+2025-11-11 09:23:59,909 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-11 09:23:59,912 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-11 09:23:59,912 [INFO] ConfigSets completed
+2025-11-11 09:23:59,912 [INFO] -----------------------Build complete-----------------------
+2025-11-11 10:01:54,239 [INFO] -----------------------Starting build-----------------------
+2025-11-11 10:01:54,244 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-11 10:01:54,247 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-11 10:01:54,249 [INFO] Running config prebuild_0_love_u_convert
+2025-11-11 10:01:54,255 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-11 10:01:54,258 [INFO] Running config prebuild_1_love_u_convert
+2025-11-11 10:01:54,262 [INFO] Running config prebuild_2_love_u_convert
+2025-11-11 10:01:54,263 [INFO] ConfigSets completed
+2025-11-11 10:01:54,263 [INFO] -----------------------Build complete-----------------------
+2025-11-11 10:02:05,808 [INFO] -----------------------Starting build-----------------------
+2025-11-11 10:02:05,818 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-11 10:02:05,821 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-11 10:02:05,821 [INFO] ConfigSets completed
+2025-11-11 10:02:05,821 [INFO] -----------------------Build complete-----------------------
+2025-11-11 10:08:47,728 [INFO] -----------------------Starting build-----------------------
+2025-11-11 10:08:47,732 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-11 10:08:47,734 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-11 10:08:47,736 [INFO] Running config prebuild_0_love_u_convert
+2025-11-11 10:08:47,741 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-11 10:08:47,745 [INFO] Running config prebuild_1_love_u_convert
+2025-11-11 10:08:47,748 [INFO] Running config prebuild_2_love_u_convert
+2025-11-11 10:08:47,749 [INFO] ConfigSets completed
+2025-11-11 10:08:47,749 [INFO] -----------------------Build complete-----------------------
+2025-11-11 10:08:57,875 [INFO] -----------------------Starting build-----------------------
+2025-11-11 10:08:57,879 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-11 10:08:57,881 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-11 10:08:57,881 [INFO] ConfigSets completed
+2025-11-11 10:08:57,881 [INFO] -----------------------Build complete-----------------------
+2025-11-11 10:34:12,744 [INFO] -----------------------Starting build-----------------------
+2025-11-11 10:34:12,750 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-11 10:34:12,752 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-11 10:34:12,755 [INFO] Running config prebuild_0_love_u_convert
+2025-11-11 10:34:12,760 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-11 10:34:12,763 [INFO] Running config prebuild_1_love_u_convert
+2025-11-11 10:34:12,766 [INFO] Running config prebuild_2_love_u_convert
+2025-11-11 10:34:12,768 [INFO] ConfigSets completed
+2025-11-11 10:34:12,768 [INFO] -----------------------Build complete-----------------------
+2025-11-11 10:34:23,011 [INFO] -----------------------Starting build-----------------------
+2025-11-11 10:34:23,016 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-11 10:34:23,019 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-11 10:34:23,019 [INFO] ConfigSets completed
+2025-11-11 10:34:23,019 [INFO] -----------------------Build complete-----------------------
+2025-11-11 10:43:35,553 [INFO] -----------------------Starting build-----------------------
+2025-11-11 10:43:35,559 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-11 10:43:35,561 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-11 10:43:35,563 [INFO] Running config prebuild_0_love_u_convert
+2025-11-11 10:43:35,569 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-11 10:43:35,572 [INFO] Running config prebuild_1_love_u_convert
+2025-11-11 10:43:35,575 [INFO] Running config prebuild_2_love_u_convert
+2025-11-11 10:43:35,577 [INFO] ConfigSets completed
+2025-11-11 10:43:35,577 [INFO] -----------------------Build complete-----------------------
+2025-11-11 10:43:45,897 [INFO] -----------------------Starting build-----------------------
+2025-11-11 10:43:45,902 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-11 10:43:45,904 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-11 10:43:45,905 [INFO] ConfigSets completed
+2025-11-11 10:43:45,905 [INFO] -----------------------Build complete-----------------------
+2025-11-12 15:19:33,240 [INFO] -----------------------Starting build-----------------------
+2025-11-12 15:19:33,245 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-12 15:19:33,247 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-12 15:19:33,250 [INFO] Running config prebuild_0_love_u_convert
+2025-11-12 15:19:33,256 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-12 15:19:33,259 [INFO] Running config prebuild_1_love_u_convert
+2025-11-12 15:19:33,263 [INFO] Running config prebuild_2_love_u_convert
+2025-11-12 15:19:33,264 [INFO] ConfigSets completed
+2025-11-12 15:19:33,264 [INFO] -----------------------Build complete-----------------------
+2025-11-12 15:19:43,540 [INFO] -----------------------Starting build-----------------------
+2025-11-12 15:19:43,545 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-12 15:19:43,547 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-12 15:19:43,548 [INFO] ConfigSets completed
+2025-11-12 15:19:43,548 [INFO] -----------------------Build complete-----------------------
+2025-11-12 15:39:05,031 [INFO] -----------------------Starting build-----------------------
+2025-11-12 15:39:05,036 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-12 15:39:05,039 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-12 15:39:05,041 [INFO] Running config prebuild_0_love_u_convert
+2025-11-12 15:39:05,047 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-12 15:39:05,051 [INFO] Running config prebuild_1_love_u_convert
+2025-11-12 15:39:05,054 [INFO] Running config prebuild_2_love_u_convert
+2025-11-12 15:39:05,055 [INFO] ConfigSets completed
+2025-11-12 15:39:05,055 [INFO] -----------------------Build complete-----------------------
+2025-11-12 15:39:15,901 [INFO] -----------------------Starting build-----------------------
+2025-11-12 15:39:15,906 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-12 15:39:15,908 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-12 15:39:15,909 [INFO] ConfigSets completed
+2025-11-12 15:39:15,909 [INFO] -----------------------Build complete-----------------------
+2025-11-12 17:32:03,622 [INFO] -----------------------Starting build-----------------------
+2025-11-12 17:32:03,628 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-12 17:32:03,631 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-12 17:32:03,634 [INFO] Running config prebuild_0_love_u_convert
+2025-11-12 17:32:03,640 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-12 17:32:03,644 [INFO] Running config prebuild_1_love_u_convert
+2025-11-12 17:32:03,647 [INFO] Running config prebuild_2_love_u_convert
+2025-11-12 17:32:03,649 [INFO] ConfigSets completed
+2025-11-12 17:32:03,649 [INFO] -----------------------Build complete-----------------------
+2025-11-12 17:32:13,985 [INFO] -----------------------Starting build-----------------------
+2025-11-12 17:32:13,991 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-12 17:32:13,993 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-12 17:32:13,993 [INFO] ConfigSets completed
+2025-11-12 17:32:13,993 [INFO] -----------------------Build complete-----------------------
+2025-11-12 17:47:37,062 [INFO] -----------------------Starting build-----------------------
+2025-11-12 17:47:37,066 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-12 17:47:37,068 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-12 17:47:37,070 [INFO] Running config prebuild_0_love_u_convert
+2025-11-12 17:47:37,076 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-12 17:47:37,079 [INFO] Running config prebuild_1_love_u_convert
+2025-11-12 17:47:37,082 [INFO] Running config prebuild_2_love_u_convert
+2025-11-12 17:47:37,084 [INFO] ConfigSets completed
+2025-11-12 17:47:37,084 [INFO] -----------------------Build complete-----------------------
+2025-11-12 17:47:47,123 [INFO] -----------------------Starting build-----------------------
+2025-11-12 17:47:47,128 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-12 17:47:47,130 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-12 17:47:47,130 [INFO] ConfigSets completed
+2025-11-12 17:47:47,130 [INFO] -----------------------Build complete-----------------------
+2025-11-12 18:02:03,230 [INFO] -----------------------Starting build-----------------------
+2025-11-12 18:02:03,241 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-12 18:02:03,243 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-12 18:02:03,246 [INFO] Running config prebuild_0_love_u_convert
+2025-11-12 18:02:03,255 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-12 18:02:03,258 [INFO] Running config prebuild_1_love_u_convert
+2025-11-12 18:02:03,262 [INFO] Running config prebuild_2_love_u_convert
+2025-11-12 18:02:03,264 [INFO] ConfigSets completed
+2025-11-12 18:02:03,265 [INFO] -----------------------Build complete-----------------------
+2025-11-12 18:02:13,950 [INFO] -----------------------Starting build-----------------------
+2025-11-12 18:02:13,955 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-12 18:02:13,956 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-12 18:02:13,957 [INFO] ConfigSets completed
+2025-11-12 18:02:13,957 [INFO] -----------------------Build complete-----------------------
+2025-11-12 18:16:46,605 [INFO] -----------------------Starting build-----------------------
+2025-11-12 18:16:46,610 [INFO] Running configSets: Infra-EmbeddedPreBuild
+2025-11-12 18:16:46,613 [INFO] Running configSet Infra-EmbeddedPreBuild
+2025-11-12 18:16:46,615 [INFO] Running config prebuild_0_love_u_convert
+2025-11-12 18:16:46,621 [INFO] Command 01_make_cleanup_executable succeeded
+2025-11-12 18:16:46,624 [INFO] Running config prebuild_1_love_u_convert
+2025-11-12 18:16:46,628 [INFO] Running config prebuild_2_love_u_convert
+2025-11-12 18:16:46,629 [INFO] ConfigSets completed
+2025-11-12 18:16:46,629 [INFO] -----------------------Build complete-----------------------
+2025-11-12 18:16:56,752 [INFO] -----------------------Starting build-----------------------
+2025-11-12 18:16:56,758 [INFO] Running configSets: Infra-EmbeddedPostBuild
+2025-11-12 18:16:56,760 [INFO] Running configSet Infra-EmbeddedPostBuild
+2025-11-12 18:16:56,760 [INFO] ConfigSets completed
+2025-11-12 18:16:56,761 [INFO] -----------------------Build complete-----------------------
